@@ -1,0 +1,90 @@
+service: sls-benchmark-aws
+
+provider:
+  name: aws
+  region: us-east-1
+  stage: dev
+
+plugins:
+  - serverless-python-requirements
+
+package:
+  individually: true
+
+functions:
+  # Python 3.11
+  py_128:
+    handler: benchmarks/python/handler.lambda_handler
+    runtime: python3.11
+    memorySize: 128
+  py_256:
+    handler: benchmarks/python/handler.lambda_handler
+    runtime: python3.11
+    memorySize: 256
+  py_512:
+    handler: benchmarks/python/handler.lambda_handler
+    runtime: python3.11
+    memorySize: 512
+  py_1024:
+    handler: benchmarks/python/handler.lambda_handler
+    runtime: python3.11
+    memorySize: 1024
+  py_2048:
+    handler: benchmarks/python/handler.lambda_handler
+    runtime: python3.11
+    memorySize: 2048
+
+  # Node.js 20
+  node_128:
+    handler: benchmarks/nodejs/index.handler
+    runtime: nodejs20.x
+    memorySize: 128
+  node_256:
+    handler: benchmarks/nodejs/index.handler
+    runtime: nodejs20.x
+    memorySize: 256
+  node_512:
+    handler: benchmarks/nodejs/index.handler
+    runtime: nodejs20.x
+    memorySize: 512
+  node_1024:
+    handler: benchmarks/nodejs/index.handler
+    runtime: nodejs20.x
+    memorySize: 1024
+  node_2048:
+    handler: benchmarks/nodejs/index.handler
+    runtime: nodejs20.x
+    memorySize: 2048
+
+  # Java 17
+  # Note: Requires 'serverless-java-requirements' or manual build to .jar
+  java_128:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 128
+    package:
+      artifact: target/benchmark-1.0.jar
+  java_256:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 256
+    package:
+      artifact: target/benchmark-1.0.jar
+  java_512:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 512
+    package:
+      artifact: target/benchmark-1.0.jar
+  java_1024:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 1024
+    package:
+      artifact: target/benchmark-1.0.jar
+  java_2048:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 2048
+    package:
+      artifact: target/benchmark-1.0.jar

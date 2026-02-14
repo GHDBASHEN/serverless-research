@@ -1,0 +1,145 @@
+service: sls-benchmark-azure
+
+provider:
+  name: azure
+  region: East US
+  runtime: python3.11 # Global default, overridden per function
+  # Azure permissions and config
+  os: linux
+  sku:
+    name: Y1
+    tier: Dynamic
+
+plugins:
+  - serverless-azure-functions
+
+package:
+  individually: true
+
+functions:
+  # Azure Functions Memory is generally dynamic in Consumption plan.
+  # We create separate functions to match the runner's expectations, 
+  # but memory control is limited without App Service Plan.
+  
+  # Python
+  py_128:
+    handler: benchmarks/python/handler.main
+    runtime: python3.11
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  py_256:
+    handler: benchmarks/python/handler.main
+    runtime: python3.11
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  py_512:
+    handler: benchmarks/python/handler.main
+    runtime: python3.11
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  py_1024:
+    handler: benchmarks/python/handler.main
+    runtime: python3.11
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  py_2048:
+    handler: benchmarks/python/handler.main
+    runtime: python3.11
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  # Node.js
+  node_128:
+    handler: benchmarks/nodejs/index.main
+    runtime: nodejs20
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  node_256:
+    handler: benchmarks/nodejs/index.main
+    runtime: nodejs20
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  node_512:
+    handler: benchmarks/nodejs/index.main
+    runtime: nodejs20
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  node_1024:
+    handler: benchmarks/nodejs/index.main
+    runtime: nodejs20
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  node_2048:
+    handler: benchmarks/nodejs/index.main
+    runtime: nodejs20
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  # Java
+  java_128:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+
+  java_256:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+          
+  java_512:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+          
+  java_1024:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous
+          
+  java_2048:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    events:
+      - http: true
+        x-azure-settings:
+          authLevel: anonymous

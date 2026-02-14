@@ -1,0 +1,107 @@
+service: sls-benchmark-google
+
+provider:
+  name: google
+  stage: dev
+  region: us-central1
+  project: my-project-id # Placeholder
+
+plugins:
+  - serverless-google-cloudfunctions
+
+package:
+  individually: true
+
+functions:
+  # Python
+  py_128:
+    handler: google_handler
+    runtime: python311
+    memorySize: 128
+    code: benchmarks/python
+    
+  py_256:
+    handler: google_handler
+    runtime: python311
+    memorySize: 256
+    code: benchmarks/python
+    
+  py_512:
+    handler: google_handler
+    runtime: python311
+    memorySize: 512
+    code: benchmarks/python
+    
+  py_1024:
+    handler: google_handler
+    runtime: python311
+    memorySize: 1024
+    code: benchmarks/python
+    
+  py_2048:
+    handler: google_handler
+    runtime: python311
+    memorySize: 2048
+    code: benchmarks/python
+
+  # Node.js
+  node_128:
+    handler: googleHandler
+    runtime: nodejs20
+    memorySize: 128
+    code: benchmarks/nodejs
+    
+  node_256:
+    handler: googleHandler
+    runtime: nodejs20
+    memorySize: 256
+    code: benchmarks/nodejs
+
+  node_512:
+    handler: googleHandler
+    runtime: nodejs20
+    memorySize: 512
+    code: benchmarks/nodejs
+    
+  node_1024:
+    handler: googleHandler
+    runtime: nodejs20
+    memorySize: 1024
+    code: benchmarks/nodejs
+    
+  node_2048:
+    handler: googleHandler
+    runtime: nodejs20
+    memorySize: 2048
+    code: benchmarks/nodejs
+
+  # Java
+  java_128:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 128
+    code: benchmarks/java # Needs compiled jar structure usually
+    
+  java_256:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 256
+    code: benchmarks/java
+    
+  java_512:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 512
+    code: benchmarks/java
+    
+  java_1024:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 1024
+    code: benchmarks/java
+    
+  java_2048:
+    handler: com.serverless.benchmark.Function
+    runtime: java17
+    memorySize: 2048
+    code: benchmarks/java

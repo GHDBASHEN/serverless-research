@@ -1,0 +1,902 @@
+[
+  {
+    "id": 1,
+    "name": "fibonacci_xs_v1",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 2,
+    "name": "fibonacci_xs_v2",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 11
+    },
+    "category": "XS"
+  },
+  {
+    "id": 3,
+    "name": "fibonacci_xs_v3",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 12
+    },
+    "category": "XS"
+  },
+  {
+    "id": 4,
+    "name": "fibonacci_xs_v4",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 13
+    },
+    "category": "XS"
+  },
+  {
+    "id": 5,
+    "name": "fibonacci_s_v1",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 18
+    },
+    "category": "S"
+  },
+  {
+    "id": 6,
+    "name": "fibonacci_s_v2",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 19
+    },
+    "category": "S"
+  },
+  {
+    "id": 7,
+    "name": "fibonacci_s_v3",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 20
+    },
+    "category": "S"
+  },
+  {
+    "id": 8,
+    "name": "fibonacci_s_v4",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 21
+    },
+    "category": "S"
+  },
+  {
+    "id": 9,
+    "name": "fibonacci_m_v1",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 24
+    },
+    "category": "M"
+  },
+  {
+    "id": 10,
+    "name": "fibonacci_m_v2",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 25
+    },
+    "category": "M"
+  },
+  {
+    "id": 11,
+    "name": "fibonacci_m_v3",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 26
+    },
+    "category": "M"
+  },
+  {
+    "id": 12,
+    "name": "fibonacci_m_v4",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 27
+    },
+    "category": "M"
+  },
+  {
+    "id": 13,
+    "name": "fibonacci_l_v1",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 30
+    },
+    "category": "L"
+  },
+  {
+    "id": 14,
+    "name": "fibonacci_l_v2",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 31
+    },
+    "category": "L"
+  },
+  {
+    "id": 15,
+    "name": "fibonacci_l_v3",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 32
+    },
+    "category": "L"
+  },
+  {
+    "id": 16,
+    "name": "fibonacci_l_v4",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 33
+    },
+    "category": "L"
+  },
+  {
+    "id": 17,
+    "name": "fibonacci_xl_v1",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 34
+    },
+    "category": "XL"
+  },
+  {
+    "id": 18,
+    "name": "fibonacci_xl_v2",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 35
+    },
+    "category": "XL"
+  },
+  {
+    "id": 19,
+    "name": "fibonacci_xl_v3",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 36
+    },
+    "category": "XL"
+  },
+  {
+    "id": 20,
+    "name": "fibonacci_xl_v4",
+    "payload": {
+      "workload": "fibonacci",
+      "size": 37
+    },
+    "category": "XL"
+  },
+  {
+    "id": 21,
+    "name": "matrix_mult_xs_v1",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 22,
+    "name": "matrix_mult_xs_v2",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 15
+    },
+    "category": "XS"
+  },
+  {
+    "id": 23,
+    "name": "matrix_mult_xs_v3",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 20
+    },
+    "category": "XS"
+  },
+  {
+    "id": 24,
+    "name": "matrix_mult_xs_v4",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 25
+    },
+    "category": "XS"
+  },
+  {
+    "id": 25,
+    "name": "matrix_mult_s_v1",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 40
+    },
+    "category": "S"
+  },
+  {
+    "id": 26,
+    "name": "matrix_mult_s_v2",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 45
+    },
+    "category": "S"
+  },
+  {
+    "id": 27,
+    "name": "matrix_mult_s_v3",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 28,
+    "name": "matrix_mult_s_v4",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 55
+    },
+    "category": "S"
+  },
+  {
+    "id": 29,
+    "name": "matrix_mult_m_v1",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 80
+    },
+    "category": "M"
+  },
+  {
+    "id": 30,
+    "name": "matrix_mult_m_v2",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 90
+    },
+    "category": "M"
+  },
+  {
+    "id": 31,
+    "name": "matrix_mult_m_v3",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 32,
+    "name": "matrix_mult_m_v4",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 110
+    },
+    "category": "M"
+  },
+  {
+    "id": 33,
+    "name": "matrix_mult_l_v1",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 150
+    },
+    "category": "L"
+  },
+  {
+    "id": 34,
+    "name": "matrix_mult_l_v2",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 175
+    },
+    "category": "L"
+  },
+  {
+    "id": 35,
+    "name": "matrix_mult_l_v3",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 200
+    },
+    "category": "L"
+  },
+  {
+    "id": 36,
+    "name": "matrix_mult_l_v4",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 225
+    },
+    "category": "L"
+  },
+  {
+    "id": 37,
+    "name": "matrix_mult_xl_v1",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 300
+    },
+    "category": "XL"
+  },
+  {
+    "id": 38,
+    "name": "matrix_mult_xl_v2",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 350
+    },
+    "category": "XL"
+  },
+  {
+    "id": 39,
+    "name": "matrix_mult_xl_v3",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 400
+    },
+    "category": "XL"
+  },
+  {
+    "id": 40,
+    "name": "matrix_mult_xl_v4",
+    "payload": {
+      "workload": "matrix_mult",
+      "size": 450
+    },
+    "category": "XL"
+  },
+  {
+    "id": 41,
+    "name": "prime_sieve_xs_v1",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 100
+    },
+    "category": "XS"
+  },
+  {
+    "id": 42,
+    "name": "prime_sieve_xs_v2",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 200
+    },
+    "category": "XS"
+  },
+  {
+    "id": 43,
+    "name": "prime_sieve_xs_v3",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 300
+    },
+    "category": "XS"
+  },
+  {
+    "id": 44,
+    "name": "prime_sieve_xs_v4",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 400
+    },
+    "category": "XS"
+  },
+  {
+    "id": 45,
+    "name": "prime_sieve_s_v1",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1000
+    },
+    "category": "S"
+  },
+  {
+    "id": 46,
+    "name": "prime_sieve_s_v2",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1500
+    },
+    "category": "S"
+  },
+  {
+    "id": 47,
+    "name": "prime_sieve_s_v3",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 2000
+    },
+    "category": "S"
+  },
+  {
+    "id": 48,
+    "name": "prime_sieve_s_v4",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 2500
+    },
+    "category": "S"
+  },
+  {
+    "id": 49,
+    "name": "prime_sieve_m_v1",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 10000
+    },
+    "category": "M"
+  },
+  {
+    "id": 50,
+    "name": "prime_sieve_m_v2",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 15000
+    },
+    "category": "M"
+  },
+  {
+    "id": 51,
+    "name": "prime_sieve_m_v3",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 20000
+    },
+    "category": "M"
+  },
+  {
+    "id": 52,
+    "name": "prime_sieve_m_v4",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 25000
+    },
+    "category": "M"
+  },
+  {
+    "id": 53,
+    "name": "prime_sieve_l_v1",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 100000
+    },
+    "category": "L"
+  },
+  {
+    "id": 54,
+    "name": "prime_sieve_l_v2",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 150000
+    },
+    "category": "L"
+  },
+  {
+    "id": 55,
+    "name": "prime_sieve_l_v3",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 200000
+    },
+    "category": "L"
+  },
+  {
+    "id": 56,
+    "name": "prime_sieve_l_v4",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 250000
+    },
+    "category": "L"
+  },
+  {
+    "id": 57,
+    "name": "prime_sieve_xl_v1",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 58,
+    "name": "prime_sieve_xl_v2",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1250000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 59,
+    "name": "prime_sieve_xl_v3",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1500000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 60,
+    "name": "prime_sieve_xl_v4",
+    "payload": {
+      "workload": "prime_sieve",
+      "size": 1750000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 61,
+    "name": "file_io_xs_v1",
+    "payload": {
+      "workload": "file_io",
+      "size": 100
+    },
+    "category": "XS"
+  },
+  {
+    "id": 62,
+    "name": "file_io_xs_v2",
+    "payload": {
+      "workload": "file_io",
+      "size": 200
+    },
+    "category": "XS"
+  },
+  {
+    "id": 63,
+    "name": "file_io_xs_v3",
+    "payload": {
+      "workload": "file_io",
+      "size": 300
+    },
+    "category": "XS"
+  },
+  {
+    "id": 64,
+    "name": "file_io_xs_v4",
+    "payload": {
+      "workload": "file_io",
+      "size": 400
+    },
+    "category": "XS"
+  },
+  {
+    "id": 65,
+    "name": "file_io_s_v1",
+    "payload": {
+      "workload": "file_io",
+      "size": 1024
+    },
+    "category": "S"
+  },
+  {
+    "id": 66,
+    "name": "file_io_s_v2",
+    "payload": {
+      "workload": "file_io",
+      "size": 2048
+    },
+    "category": "S"
+  },
+  {
+    "id": 67,
+    "name": "file_io_s_v3",
+    "payload": {
+      "workload": "file_io",
+      "size": 4096
+    },
+    "category": "S"
+  },
+  {
+    "id": 68,
+    "name": "file_io_s_v4",
+    "payload": {
+      "workload": "file_io",
+      "size": 8192
+    },
+    "category": "S"
+  },
+  {
+    "id": 69,
+    "name": "file_io_m_v1",
+    "payload": {
+      "workload": "file_io",
+      "size": 10240
+    },
+    "category": "M"
+  },
+  {
+    "id": 70,
+    "name": "file_io_m_v2",
+    "payload": {
+      "workload": "file_io",
+      "size": 20480
+    },
+    "category": "M"
+  },
+  {
+    "id": 71,
+    "name": "file_io_m_v3",
+    "payload": {
+      "workload": "file_io",
+      "size": 50000
+    },
+    "category": "M"
+  },
+  {
+    "id": 72,
+    "name": "file_io_m_v4",
+    "payload": {
+      "workload": "file_io",
+      "size": 100000
+    },
+    "category": "M"
+  },
+  {
+    "id": 73,
+    "name": "file_io_l_v1",
+    "payload": {
+      "workload": "file_io",
+      "size": 1048576
+    },
+    "category": "L"
+  },
+  {
+    "id": 74,
+    "name": "file_io_l_v2",
+    "payload": {
+      "workload": "file_io",
+      "size": 1500000
+    },
+    "category": "L"
+  },
+  {
+    "id": 75,
+    "name": "file_io_l_v3",
+    "payload": {
+      "workload": "file_io",
+      "size": 2000000
+    },
+    "category": "L"
+  },
+  {
+    "id": 76,
+    "name": "file_io_l_v4",
+    "payload": {
+      "workload": "file_io",
+      "size": 2500000
+    },
+    "category": "L"
+  },
+  {
+    "id": 77,
+    "name": "file_io_xl_v1",
+    "payload": {
+      "workload": "file_io",
+      "size": 5000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 78,
+    "name": "file_io_xl_v2",
+    "payload": {
+      "workload": "file_io",
+      "size": 7500000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 79,
+    "name": "file_io_xl_v3",
+    "payload": {
+      "workload": "file_io",
+      "size": 10000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 80,
+    "name": "file_io_xl_v4",
+    "payload": {
+      "workload": "file_io",
+      "size": 12500000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 81,
+    "name": "float_ops_xs_v1",
+    "payload": {
+      "workload": "float_ops",
+      "size": 1000
+    },
+    "category": "XS"
+  },
+  {
+    "id": 82,
+    "name": "float_ops_xs_v2",
+    "payload": {
+      "workload": "float_ops",
+      "size": 2000
+    },
+    "category": "XS"
+  },
+  {
+    "id": 83,
+    "name": "float_ops_xs_v3",
+    "payload": {
+      "workload": "float_ops",
+      "size": 3000
+    },
+    "category": "XS"
+  },
+  {
+    "id": 84,
+    "name": "float_ops_xs_v4",
+    "payload": {
+      "workload": "float_ops",
+      "size": 4000
+    },
+    "category": "XS"
+  },
+  {
+    "id": 85,
+    "name": "float_ops_s_v1",
+    "payload": {
+      "workload": "float_ops",
+      "size": 50000
+    },
+    "category": "S"
+  },
+  {
+    "id": 86,
+    "name": "float_ops_s_v2",
+    "payload": {
+      "workload": "float_ops",
+      "size": 60000
+    },
+    "category": "S"
+  },
+  {
+    "id": 87,
+    "name": "float_ops_s_v3",
+    "payload": {
+      "workload": "float_ops",
+      "size": 70000
+    },
+    "category": "S"
+  },
+  {
+    "id": 88,
+    "name": "float_ops_s_v4",
+    "payload": {
+      "workload": "float_ops",
+      "size": 80000
+    },
+    "category": "S"
+  },
+  {
+    "id": 89,
+    "name": "float_ops_m_v1",
+    "payload": {
+      "workload": "float_ops",
+      "size": 500000
+    },
+    "category": "M"
+  },
+  {
+    "id": 90,
+    "name": "float_ops_m_v2",
+    "payload": {
+      "workload": "float_ops",
+      "size": 750000
+    },
+    "category": "M"
+  },
+  {
+    "id": 91,
+    "name": "float_ops_m_v3",
+    "payload": {
+      "workload": "float_ops",
+      "size": 1000000
+    },
+    "category": "M"
+  },
+  {
+    "id": 92,
+    "name": "float_ops_m_v4",
+    "payload": {
+      "workload": "float_ops",
+      "size": 1250000
+    },
+    "category": "M"
+  },
+  {
+    "id": 93,
+    "name": "float_ops_l_v1",
+    "payload": {
+      "workload": "float_ops",
+      "size": 5000000
+    },
+    "category": "L"
+  },
+  {
+    "id": 94,
+    "name": "float_ops_l_v2",
+    "payload": {
+      "workload": "float_ops",
+      "size": 7500000
+    },
+    "category": "L"
+  },
+  {
+    "id": 95,
+    "name": "float_ops_l_v3",
+    "payload": {
+      "workload": "float_ops",
+      "size": 10000000
+    },
+    "category": "L"
+  },
+  {
+    "id": 96,
+    "name": "float_ops_l_v4",
+    "payload": {
+      "workload": "float_ops",
+      "size": 12500000
+    },
+    "category": "L"
+  },
+  {
+    "id": 97,
+    "name": "float_ops_xl_v1",
+    "payload": {
+      "workload": "float_ops",
+      "size": 20000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 98,
+    "name": "float_ops_xl_v2",
+    "payload": {
+      "workload": "float_ops",
+      "size": 30000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 99,
+    "name": "float_ops_xl_v3",
+    "payload": {
+      "workload": "float_ops",
+      "size": 40000000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 100,
+    "name": "float_ops_xl_v4",
+    "payload": {
+      "workload": "float_ops",
+      "size": 50000000
+    },
+    "category": "XL"
+  }
+]
