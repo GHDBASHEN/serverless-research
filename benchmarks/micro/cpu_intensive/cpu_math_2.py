@@ -1,4 +1,4 @@
-# micro/cpu_intensive/fibonacci.py
+# micro/cpu_intensive/cpu_math_2.py
 import json
 import time
 import math
@@ -7,7 +7,7 @@ import os
 
 def handle(event, context):
     """
-    Standalone implementation for the 'fibonacci' benchmark.
+    Standalone implementation for the 'cpu_math_2' benchmark.
     Category: micro -> cpu_intensive
     """
     start_time = time.time()
@@ -21,14 +21,14 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    # Recursive fibonacci is standard for CPU stress but hitting recursion limits or timeout on large N is risk.\n        # We'll use iterative for safety or limit N in benchmarks config.\n        # User requirement implies cpu stress.\n        def fib(n):\n            if n <= 1: return n\n            return fib(n-1) + fib(n-2)\n        # Warning: N > 35 is very slow in Python\n        result = fib(size)\n        
+    val = 1\n        for i in range(size * 100): val = (val * 1.0001) ** 1.01\n
     
     duration_ms = (time.time() - start_time) * 1000
     
     return {
         'statusCode': 200,
         'body': json.dumps({
-            'workload': 'fibonacci',
+            'workload': 'cpu_math_2',
             'size': size,
             'result': str(result)[:500], # Trim large results for response
             'duration_ms': duration_ms

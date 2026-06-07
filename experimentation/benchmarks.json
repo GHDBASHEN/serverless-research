@@ -898,5 +898,1895 @@
       "size": 50000000
     },
     "category": "XL"
+  },
+  {
+    "name": "json_transform_xs",
+    "payload": {
+      "workload": "json_transform",
+      "size": 10
+    },
+    "category": "XS",
+    "id": 101
+  },
+  {
+    "name": "json_transform_s",
+    "payload": {
+      "workload": "json_transform",
+      "size": 100
+    },
+    "category": "S",
+    "id": 102
+  },
+  {
+    "name": "json_transform_m",
+    "payload": {
+      "workload": "json_transform",
+      "size": 1000
+    },
+    "category": "M",
+    "id": 103
+  },
+  {
+    "name": "json_transform_l",
+    "payload": {
+      "workload": "json_transform",
+      "size": 10000
+    },
+    "category": "L",
+    "id": 104
+  },
+  {
+    "name": "json_transform_xl",
+    "payload": {
+      "workload": "json_transform",
+      "size": 100000
+    },
+    "category": "XL",
+    "id": 105
+  },
+  {
+    "name": "crypto_hash_xs",
+    "payload": {
+      "workload": "crypto_hash",
+      "size": 1000
+    },
+    "category": "XS",
+    "id": 106
+  },
+  {
+    "name": "crypto_hash_s",
+    "payload": {
+      "workload": "crypto_hash",
+      "size": 10000
+    },
+    "category": "S",
+    "id": 107
+  },
+  {
+    "name": "crypto_hash_m",
+    "payload": {
+      "workload": "crypto_hash",
+      "size": 50000
+    },
+    "category": "M",
+    "id": 108
+  },
+  {
+    "name": "crypto_hash_l",
+    "payload": {
+      "workload": "crypto_hash",
+      "size": 100000
+    },
+    "category": "L",
+    "id": 109
+  },
+  {
+    "name": "crypto_hash_xl",
+    "payload": {
+      "workload": "crypto_hash",
+      "size": 500000
+    },
+    "category": "XL",
+    "id": 110
+  },
+  {
+    "id": 111,
+    "name": "cpu_math_1_xs",
+    "payload": {
+      "workload": "cpu_math_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 112,
+    "name": "cpu_math_1_s",
+    "payload": {
+      "workload": "cpu_math_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 113,
+    "name": "cpu_math_1_m",
+    "payload": {
+      "workload": "cpu_math_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 114,
+    "name": "cpu_math_1_l",
+    "payload": {
+      "workload": "cpu_math_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 115,
+    "name": "cpu_math_1_xl",
+    "payload": {
+      "workload": "cpu_math_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 116,
+    "name": "cpu_math_2_xs",
+    "payload": {
+      "workload": "cpu_math_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 117,
+    "name": "cpu_math_2_s",
+    "payload": {
+      "workload": "cpu_math_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 118,
+    "name": "cpu_math_2_m",
+    "payload": {
+      "workload": "cpu_math_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 119,
+    "name": "cpu_math_2_l",
+    "payload": {
+      "workload": "cpu_math_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 120,
+    "name": "cpu_math_2_xl",
+    "payload": {
+      "workload": "cpu_math_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 121,
+    "name": "cpu_math_3_xs",
+    "payload": {
+      "workload": "cpu_math_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 122,
+    "name": "cpu_math_3_s",
+    "payload": {
+      "workload": "cpu_math_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 123,
+    "name": "cpu_math_3_m",
+    "payload": {
+      "workload": "cpu_math_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 124,
+    "name": "cpu_math_3_l",
+    "payload": {
+      "workload": "cpu_math_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 125,
+    "name": "cpu_math_3_xl",
+    "payload": {
+      "workload": "cpu_math_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 126,
+    "name": "cpu_math_4_xs",
+    "payload": {
+      "workload": "cpu_math_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 127,
+    "name": "cpu_math_4_s",
+    "payload": {
+      "workload": "cpu_math_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 128,
+    "name": "cpu_math_4_m",
+    "payload": {
+      "workload": "cpu_math_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 129,
+    "name": "cpu_math_4_l",
+    "payload": {
+      "workload": "cpu_math_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 130,
+    "name": "cpu_math_4_xl",
+    "payload": {
+      "workload": "cpu_math_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 131,
+    "name": "cpu_math_5_xs",
+    "payload": {
+      "workload": "cpu_math_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 132,
+    "name": "cpu_math_5_s",
+    "payload": {
+      "workload": "cpu_math_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 133,
+    "name": "cpu_math_5_m",
+    "payload": {
+      "workload": "cpu_math_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 134,
+    "name": "cpu_math_5_l",
+    "payload": {
+      "workload": "cpu_math_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 135,
+    "name": "cpu_math_5_xl",
+    "payload": {
+      "workload": "cpu_math_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 136,
+    "name": "mem_alloc_1_xs",
+    "payload": {
+      "workload": "mem_alloc_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 137,
+    "name": "mem_alloc_1_s",
+    "payload": {
+      "workload": "mem_alloc_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 138,
+    "name": "mem_alloc_1_m",
+    "payload": {
+      "workload": "mem_alloc_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 139,
+    "name": "mem_alloc_1_l",
+    "payload": {
+      "workload": "mem_alloc_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 140,
+    "name": "mem_alloc_1_xl",
+    "payload": {
+      "workload": "mem_alloc_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 141,
+    "name": "mem_alloc_2_xs",
+    "payload": {
+      "workload": "mem_alloc_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 142,
+    "name": "mem_alloc_2_s",
+    "payload": {
+      "workload": "mem_alloc_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 143,
+    "name": "mem_alloc_2_m",
+    "payload": {
+      "workload": "mem_alloc_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 144,
+    "name": "mem_alloc_2_l",
+    "payload": {
+      "workload": "mem_alloc_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 145,
+    "name": "mem_alloc_2_xl",
+    "payload": {
+      "workload": "mem_alloc_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 146,
+    "name": "mem_alloc_3_xs",
+    "payload": {
+      "workload": "mem_alloc_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 147,
+    "name": "mem_alloc_3_s",
+    "payload": {
+      "workload": "mem_alloc_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 148,
+    "name": "mem_alloc_3_m",
+    "payload": {
+      "workload": "mem_alloc_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 149,
+    "name": "mem_alloc_3_l",
+    "payload": {
+      "workload": "mem_alloc_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 150,
+    "name": "mem_alloc_3_xl",
+    "payload": {
+      "workload": "mem_alloc_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 151,
+    "name": "mem_string_4_xs",
+    "payload": {
+      "workload": "mem_string_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 152,
+    "name": "mem_string_4_s",
+    "payload": {
+      "workload": "mem_string_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 153,
+    "name": "mem_string_4_m",
+    "payload": {
+      "workload": "mem_string_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 154,
+    "name": "mem_string_4_l",
+    "payload": {
+      "workload": "mem_string_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 155,
+    "name": "mem_string_4_xl",
+    "payload": {
+      "workload": "mem_string_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 156,
+    "name": "mem_dict_5_xs",
+    "payload": {
+      "workload": "mem_dict_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 157,
+    "name": "mem_dict_5_s",
+    "payload": {
+      "workload": "mem_dict_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 158,
+    "name": "mem_dict_5_m",
+    "payload": {
+      "workload": "mem_dict_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 159,
+    "name": "mem_dict_5_l",
+    "payload": {
+      "workload": "mem_dict_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 160,
+    "name": "mem_dict_5_xl",
+    "payload": {
+      "workload": "mem_dict_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 161,
+    "name": "disk_io_1_xs",
+    "payload": {
+      "workload": "disk_io_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 162,
+    "name": "disk_io_1_s",
+    "payload": {
+      "workload": "disk_io_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 163,
+    "name": "disk_io_1_m",
+    "payload": {
+      "workload": "disk_io_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 164,
+    "name": "disk_io_1_l",
+    "payload": {
+      "workload": "disk_io_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 165,
+    "name": "disk_io_1_xl",
+    "payload": {
+      "workload": "disk_io_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 166,
+    "name": "disk_io_2_xs",
+    "payload": {
+      "workload": "disk_io_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 167,
+    "name": "disk_io_2_s",
+    "payload": {
+      "workload": "disk_io_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 168,
+    "name": "disk_io_2_m",
+    "payload": {
+      "workload": "disk_io_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 169,
+    "name": "disk_io_2_l",
+    "payload": {
+      "workload": "disk_io_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 170,
+    "name": "disk_io_2_xl",
+    "payload": {
+      "workload": "disk_io_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 171,
+    "name": "disk_io_3_xs",
+    "payload": {
+      "workload": "disk_io_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 172,
+    "name": "disk_io_3_s",
+    "payload": {
+      "workload": "disk_io_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 173,
+    "name": "disk_io_3_m",
+    "payload": {
+      "workload": "disk_io_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 174,
+    "name": "disk_io_3_l",
+    "payload": {
+      "workload": "disk_io_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 175,
+    "name": "disk_io_3_xl",
+    "payload": {
+      "workload": "disk_io_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 176,
+    "name": "disk_io_4_xs",
+    "payload": {
+      "workload": "disk_io_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 177,
+    "name": "disk_io_4_s",
+    "payload": {
+      "workload": "disk_io_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 178,
+    "name": "disk_io_4_m",
+    "payload": {
+      "workload": "disk_io_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 179,
+    "name": "disk_io_4_l",
+    "payload": {
+      "workload": "disk_io_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 180,
+    "name": "disk_io_4_xl",
+    "payload": {
+      "workload": "disk_io_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 181,
+    "name": "disk_io_5_xs",
+    "payload": {
+      "workload": "disk_io_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 182,
+    "name": "disk_io_5_s",
+    "payload": {
+      "workload": "disk_io_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 183,
+    "name": "disk_io_5_m",
+    "payload": {
+      "workload": "disk_io_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 184,
+    "name": "disk_io_5_l",
+    "payload": {
+      "workload": "disk_io_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 185,
+    "name": "disk_io_5_xl",
+    "payload": {
+      "workload": "disk_io_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 186,
+    "name": "net_sim_1_xs",
+    "payload": {
+      "workload": "net_sim_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 187,
+    "name": "net_sim_1_s",
+    "payload": {
+      "workload": "net_sim_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 188,
+    "name": "net_sim_1_m",
+    "payload": {
+      "workload": "net_sim_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 189,
+    "name": "net_sim_1_l",
+    "payload": {
+      "workload": "net_sim_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 190,
+    "name": "net_sim_1_xl",
+    "payload": {
+      "workload": "net_sim_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 191,
+    "name": "net_sim_2_xs",
+    "payload": {
+      "workload": "net_sim_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 192,
+    "name": "net_sim_2_s",
+    "payload": {
+      "workload": "net_sim_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 193,
+    "name": "net_sim_2_m",
+    "payload": {
+      "workload": "net_sim_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 194,
+    "name": "net_sim_2_l",
+    "payload": {
+      "workload": "net_sim_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 195,
+    "name": "net_sim_2_xl",
+    "payload": {
+      "workload": "net_sim_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 196,
+    "name": "net_sim_3_xs",
+    "payload": {
+      "workload": "net_sim_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 197,
+    "name": "net_sim_3_s",
+    "payload": {
+      "workload": "net_sim_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 198,
+    "name": "net_sim_3_m",
+    "payload": {
+      "workload": "net_sim_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 199,
+    "name": "net_sim_3_l",
+    "payload": {
+      "workload": "net_sim_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 200,
+    "name": "net_sim_3_xl",
+    "payload": {
+      "workload": "net_sim_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 201,
+    "name": "net_sim_4_xs",
+    "payload": {
+      "workload": "net_sim_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 202,
+    "name": "net_sim_4_s",
+    "payload": {
+      "workload": "net_sim_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 203,
+    "name": "net_sim_4_m",
+    "payload": {
+      "workload": "net_sim_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 204,
+    "name": "net_sim_4_l",
+    "payload": {
+      "workload": "net_sim_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 205,
+    "name": "net_sim_4_xl",
+    "payload": {
+      "workload": "net_sim_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 206,
+    "name": "net_sim_5_xs",
+    "payload": {
+      "workload": "net_sim_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 207,
+    "name": "net_sim_5_s",
+    "payload": {
+      "workload": "net_sim_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 208,
+    "name": "net_sim_5_m",
+    "payload": {
+      "workload": "net_sim_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 209,
+    "name": "net_sim_5_l",
+    "payload": {
+      "workload": "net_sim_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 210,
+    "name": "net_sim_5_xl",
+    "payload": {
+      "workload": "net_sim_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 211,
+    "name": "data_proc_1_xs",
+    "payload": {
+      "workload": "data_proc_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 212,
+    "name": "data_proc_1_s",
+    "payload": {
+      "workload": "data_proc_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 213,
+    "name": "data_proc_1_m",
+    "payload": {
+      "workload": "data_proc_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 214,
+    "name": "data_proc_1_l",
+    "payload": {
+      "workload": "data_proc_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 215,
+    "name": "data_proc_1_xl",
+    "payload": {
+      "workload": "data_proc_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 216,
+    "name": "data_proc_2_xs",
+    "payload": {
+      "workload": "data_proc_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 217,
+    "name": "data_proc_2_s",
+    "payload": {
+      "workload": "data_proc_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 218,
+    "name": "data_proc_2_m",
+    "payload": {
+      "workload": "data_proc_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 219,
+    "name": "data_proc_2_l",
+    "payload": {
+      "workload": "data_proc_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 220,
+    "name": "data_proc_2_xl",
+    "payload": {
+      "workload": "data_proc_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 221,
+    "name": "data_proc_3_xs",
+    "payload": {
+      "workload": "data_proc_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 222,
+    "name": "data_proc_3_s",
+    "payload": {
+      "workload": "data_proc_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 223,
+    "name": "data_proc_3_m",
+    "payload": {
+      "workload": "data_proc_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 224,
+    "name": "data_proc_3_l",
+    "payload": {
+      "workload": "data_proc_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 225,
+    "name": "data_proc_3_xl",
+    "payload": {
+      "workload": "data_proc_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 226,
+    "name": "data_proc_4_xs",
+    "payload": {
+      "workload": "data_proc_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 227,
+    "name": "data_proc_4_s",
+    "payload": {
+      "workload": "data_proc_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 228,
+    "name": "data_proc_4_m",
+    "payload": {
+      "workload": "data_proc_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 229,
+    "name": "data_proc_4_l",
+    "payload": {
+      "workload": "data_proc_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 230,
+    "name": "data_proc_4_xl",
+    "payload": {
+      "workload": "data_proc_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 231,
+    "name": "data_proc_5_xs",
+    "payload": {
+      "workload": "data_proc_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 232,
+    "name": "data_proc_5_s",
+    "payload": {
+      "workload": "data_proc_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 233,
+    "name": "data_proc_5_m",
+    "payload": {
+      "workload": "data_proc_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 234,
+    "name": "data_proc_5_l",
+    "payload": {
+      "workload": "data_proc_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 235,
+    "name": "data_proc_5_xl",
+    "payload": {
+      "workload": "data_proc_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 236,
+    "name": "crypto_1_xs",
+    "payload": {
+      "workload": "crypto_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 237,
+    "name": "crypto_1_s",
+    "payload": {
+      "workload": "crypto_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 238,
+    "name": "crypto_1_m",
+    "payload": {
+      "workload": "crypto_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 239,
+    "name": "crypto_1_l",
+    "payload": {
+      "workload": "crypto_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 240,
+    "name": "crypto_1_xl",
+    "payload": {
+      "workload": "crypto_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 241,
+    "name": "crypto_2_xs",
+    "payload": {
+      "workload": "crypto_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 242,
+    "name": "crypto_2_s",
+    "payload": {
+      "workload": "crypto_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 243,
+    "name": "crypto_2_m",
+    "payload": {
+      "workload": "crypto_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 244,
+    "name": "crypto_2_l",
+    "payload": {
+      "workload": "crypto_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 245,
+    "name": "crypto_2_xl",
+    "payload": {
+      "workload": "crypto_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 246,
+    "name": "crypto_3_xs",
+    "payload": {
+      "workload": "crypto_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 247,
+    "name": "crypto_3_s",
+    "payload": {
+      "workload": "crypto_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 248,
+    "name": "crypto_3_m",
+    "payload": {
+      "workload": "crypto_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 249,
+    "name": "crypto_3_l",
+    "payload": {
+      "workload": "crypto_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 250,
+    "name": "crypto_3_xl",
+    "payload": {
+      "workload": "crypto_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 251,
+    "name": "crypto_4_xs",
+    "payload": {
+      "workload": "crypto_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 252,
+    "name": "crypto_4_s",
+    "payload": {
+      "workload": "crypto_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 253,
+    "name": "crypto_4_m",
+    "payload": {
+      "workload": "crypto_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 254,
+    "name": "crypto_4_l",
+    "payload": {
+      "workload": "crypto_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 255,
+    "name": "crypto_4_xl",
+    "payload": {
+      "workload": "crypto_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 256,
+    "name": "crypto_5_xs",
+    "payload": {
+      "workload": "crypto_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 257,
+    "name": "crypto_5_s",
+    "payload": {
+      "workload": "crypto_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 258,
+    "name": "crypto_5_m",
+    "payload": {
+      "workload": "crypto_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 259,
+    "name": "crypto_5_l",
+    "payload": {
+      "workload": "crypto_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 260,
+    "name": "crypto_5_xl",
+    "payload": {
+      "workload": "crypto_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 261,
+    "name": "web_biz_1_xs",
+    "payload": {
+      "workload": "web_biz_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 262,
+    "name": "web_biz_1_s",
+    "payload": {
+      "workload": "web_biz_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 263,
+    "name": "web_biz_1_m",
+    "payload": {
+      "workload": "web_biz_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 264,
+    "name": "web_biz_1_l",
+    "payload": {
+      "workload": "web_biz_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 265,
+    "name": "web_biz_1_xl",
+    "payload": {
+      "workload": "web_biz_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 266,
+    "name": "web_biz_2_xs",
+    "payload": {
+      "workload": "web_biz_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 267,
+    "name": "web_biz_2_s",
+    "payload": {
+      "workload": "web_biz_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 268,
+    "name": "web_biz_2_m",
+    "payload": {
+      "workload": "web_biz_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 269,
+    "name": "web_biz_2_l",
+    "payload": {
+      "workload": "web_biz_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 270,
+    "name": "web_biz_2_xl",
+    "payload": {
+      "workload": "web_biz_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 271,
+    "name": "web_biz_3_xs",
+    "payload": {
+      "workload": "web_biz_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 272,
+    "name": "web_biz_3_s",
+    "payload": {
+      "workload": "web_biz_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 273,
+    "name": "web_biz_3_m",
+    "payload": {
+      "workload": "web_biz_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 274,
+    "name": "web_biz_3_l",
+    "payload": {
+      "workload": "web_biz_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 275,
+    "name": "web_biz_3_xl",
+    "payload": {
+      "workload": "web_biz_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 276,
+    "name": "web_biz_4_xs",
+    "payload": {
+      "workload": "web_biz_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 277,
+    "name": "web_biz_4_s",
+    "payload": {
+      "workload": "web_biz_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 278,
+    "name": "web_biz_4_m",
+    "payload": {
+      "workload": "web_biz_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 279,
+    "name": "web_biz_4_l",
+    "payload": {
+      "workload": "web_biz_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 280,
+    "name": "web_biz_4_xl",
+    "payload": {
+      "workload": "web_biz_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 281,
+    "name": "web_biz_5_xs",
+    "payload": {
+      "workload": "web_biz_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 282,
+    "name": "web_biz_5_s",
+    "payload": {
+      "workload": "web_biz_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 283,
+    "name": "web_biz_5_m",
+    "payload": {
+      "workload": "web_biz_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 284,
+    "name": "web_biz_5_l",
+    "payload": {
+      "workload": "web_biz_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 285,
+    "name": "web_biz_5_xl",
+    "payload": {
+      "workload": "web_biz_5",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 286,
+    "name": "sci_1_xs",
+    "payload": {
+      "workload": "sci_1",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 287,
+    "name": "sci_1_s",
+    "payload": {
+      "workload": "sci_1",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 288,
+    "name": "sci_1_m",
+    "payload": {
+      "workload": "sci_1",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 289,
+    "name": "sci_1_l",
+    "payload": {
+      "workload": "sci_1",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 290,
+    "name": "sci_1_xl",
+    "payload": {
+      "workload": "sci_1",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 291,
+    "name": "sci_2_xs",
+    "payload": {
+      "workload": "sci_2",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 292,
+    "name": "sci_2_s",
+    "payload": {
+      "workload": "sci_2",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 293,
+    "name": "sci_2_m",
+    "payload": {
+      "workload": "sci_2",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 294,
+    "name": "sci_2_l",
+    "payload": {
+      "workload": "sci_2",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 295,
+    "name": "sci_2_xl",
+    "payload": {
+      "workload": "sci_2",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 296,
+    "name": "sci_3_xs",
+    "payload": {
+      "workload": "sci_3",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 297,
+    "name": "sci_3_s",
+    "payload": {
+      "workload": "sci_3",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 298,
+    "name": "sci_3_m",
+    "payload": {
+      "workload": "sci_3",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 299,
+    "name": "sci_3_l",
+    "payload": {
+      "workload": "sci_3",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 300,
+    "name": "sci_3_xl",
+    "payload": {
+      "workload": "sci_3",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 301,
+    "name": "sci_4_xs",
+    "payload": {
+      "workload": "sci_4",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 302,
+    "name": "sci_4_s",
+    "payload": {
+      "workload": "sci_4",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 303,
+    "name": "sci_4_m",
+    "payload": {
+      "workload": "sci_4",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 304,
+    "name": "sci_4_l",
+    "payload": {
+      "workload": "sci_4",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 305,
+    "name": "sci_4_xl",
+    "payload": {
+      "workload": "sci_4",
+      "size": 1000
+    },
+    "category": "XL"
+  },
+  {
+    "id": 306,
+    "name": "sci_5_xs",
+    "payload": {
+      "workload": "sci_5",
+      "size": 10
+    },
+    "category": "XS"
+  },
+  {
+    "id": 307,
+    "name": "sci_5_s",
+    "payload": {
+      "workload": "sci_5",
+      "size": 50
+    },
+    "category": "S"
+  },
+  {
+    "id": 308,
+    "name": "sci_5_m",
+    "payload": {
+      "workload": "sci_5",
+      "size": 100
+    },
+    "category": "M"
+  },
+  {
+    "id": 309,
+    "name": "sci_5_l",
+    "payload": {
+      "workload": "sci_5",
+      "size": 500
+    },
+    "category": "L"
+  },
+  {
+    "id": 310,
+    "name": "sci_5_xl",
+    "payload": {
+      "workload": "sci_5",
+      "size": 1000
+    },
+    "category": "XL"
   }
 ]
