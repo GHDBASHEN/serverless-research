@@ -6,7 +6,7 @@ google/terraform/.terraform
 
 # Machine Learning Models
 models/*.onnx
-
+/models
 # Python
 __pycache__/
 *.py[cod]
