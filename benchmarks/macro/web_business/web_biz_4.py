@@ -21,7 +21,7 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    val = ''.join(random.choices('abcdef', k=size * 100))\n
+    val = ''.join(random.choices('abcdef', k=size * 100))
     
     duration_ms = (time.time() - start_time) * 1000
     

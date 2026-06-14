@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    import base64\n        b = base64.b64encode(os.urandom(size * 100))\n        base64.b64decode(b)\n
+    b = base64.b64encode(os.urandom(size * 100))
+    base64.b64decode(b)
     
     duration_ms = (time.time() - start_time) * 1000
     

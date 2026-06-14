@@ -21,7 +21,10 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    f='/tmp/d5.txt'\n        with open(f, 'w') as fh: fh.write('X' * size * 100)\n        with open(f, 'r') as fh: fh.read()\n        os.remove(f)\n
+    f='/tmp/d5.txt'
+    with open(f, 'w') as fh: fh.write('X' * size * 100)
+    with open(f, 'r') as fh: fh.read()
+    os.remove(f)
     
     duration_ms = (time.time() - start_time) * 1000
     

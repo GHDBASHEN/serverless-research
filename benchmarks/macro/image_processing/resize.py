@@ -12,7 +12,7 @@ def handler(event, context):
     
     # Get image URL
     image_url = event.get('image_url', 
-                         'https://via.placeholder.com/1000x1000.jpg')
+                         'https://upload.wikimedia.org/wikipedia/commons/d/dd/Gfp-wisconsin-madison-the-nature-boardwalk.jpg')
     target_size = event.get('size', (200, 200))
     
     # Download

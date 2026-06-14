@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    import re\n        s = 'abc 123 ' * (size * 100)\n        val = len(re.findall(r'\d+', s))\n
+    s = 'abc 123 ' * (size * 100)
+    val = len(re.findall(r'\d+', s))
     
     duration_ms = (time.time() - start_time) * 1000
     

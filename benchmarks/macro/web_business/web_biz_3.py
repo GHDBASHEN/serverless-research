@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    html = '<h1>Header</h1>' * (size * 10)\n        val = html.replace('h1>', 'h2>')\n
+    html = '<h1>Header</h1>' * (size * 10)
+    val = html.replace('h1>', 'h2>')
     
     duration_ms = (time.time() - start_time) * 1000
     

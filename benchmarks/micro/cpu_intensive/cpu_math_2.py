@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    val = 1\n        for i in range(size * 100): val = (val * 1.0001) ** 1.01\n
+    val = 1
+    for i in range(size * 100): val = (val * 1.0001) ** 1.01
     
     duration_ms = (time.time() - start_time) * 1000
     

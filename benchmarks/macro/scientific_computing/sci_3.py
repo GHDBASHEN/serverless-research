@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    data = [random.random() for _ in range(size * 100)]\n        val = [d / max(data) for d in data]\n
+    data = [random.random() for _ in range(size * 100)]
+    val = [d / max(data) for d in data]
     
     duration_ms = (time.time() - start_time) * 1000
     

@@ -21,7 +21,10 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    f='/tmp/d4.txt'\n        with open(f, 'w') as fh: \n            for i in range(size * 100): fh.write(str(i))\n        os.remove(f)\n
+    f='/tmp/d4.txt'
+    with open(f, 'w') as fh: 
+        for i in range(size * 100): fh.write(str(i))
+    os.remove(f)
     
     duration_ms = (time.time() - start_time) * 1000
     

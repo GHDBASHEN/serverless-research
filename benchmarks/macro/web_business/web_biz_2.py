@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    users = [{'active': random.choice([True, False])} for _ in range(size * 100)]\n        val = len([u for u in users if u['active']])\n
+    users = [{'active': random.choice([True, False])} for _ in range(size * 100)]
+    val = len([u for u in users if u['active']])
     
     duration_ms = (time.time() - start_time) * 1000
     

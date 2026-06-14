@@ -21,7 +21,10 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    # Recursive fibonacci is standard for CPU stress but hitting recursion limits or timeout on large N is risk.\n        # We'll use iterative for safety or limit N in benchmarks config.\n        # User requirement implies cpu stress.\n        def fib(n):\n            if n <= 1: return n\n            return fib(n-1) + fib(n-2)\n        # Warning: N > 35 is very slow in Python\n        result = fib(size)\n        
+    def fib(n):
+        if n <= 1: return n
+        return fib(n-1) + fib(n-2)
+    result = fib(size)
     
     duration_ms = (time.time() - start_time) * 1000
     

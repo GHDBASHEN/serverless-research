@@ -21,7 +21,15 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    N = size\n        A = [[random.random() for _ in range(N)] for _ in range(N)]\n        B = [[random.random() for _ in range(N)] for _ in range(N)]\n        C = [[0] * N for _ in range(N)]\n        for i in range(N):\n            for j in range(N):\n                for k in range(N):\n                    C[i][j] += A[i][k] * B[k][j]\n        result = C[0][0] # Just to ensure calculation is used\n        
+    N = size
+    A = [[random.random() for _ in range(N)] for _ in range(N)]
+    B = [[random.random() for _ in range(N)] for _ in range(N)]
+    C = [[0] * N for _ in range(N)]
+    for i in range(N):
+        for j in range(N):
+            for k in range(N):
+                C[i][j] += A[i][k] * B[k][j]
+    result = C[0][0] # Just to ensure calculation is used
     
     duration_ms = (time.time() - start_time) * 1000
     

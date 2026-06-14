@@ -21,7 +21,10 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    f='/tmp/d3.txt'\n        with open(f, 'wb') as fh: fh.write(os.urandom(size * 500))\n        os.remove(f)\n
+    f='/tmp/d3.txt'
+    with open(f, 'wb') as fh: 
+        fh.write(os.urandom(size * 500))
+    os.remove(f)
     
     duration_ms = (time.time() - start_time) * 1000
     

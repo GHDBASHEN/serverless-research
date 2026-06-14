@@ -21,7 +21,16 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    # Macro benchmark: compute-intensive security\n        import hashlib\n        iterations = size\n        passwords_to_hash = 5\n        hashed_results = []\n        for i in range(passwords_to_hash):\n            password = f"dummy_password_to_hash_{i}".encode('utf-8')\n            salt = os.urandom(16)\n            hashed = hashlib.pbkdf2_hmac('sha256', password, salt, iterations)\n            hashed_results.append(hashed.hex())\n        result = len(hashed_results)\n\n
+    import hashlib
+    iterations = size
+    passwords_to_hash = 5
+    hashed_results = []
+    for i in range(passwords_to_hash):
+        password = f"dummy_password_to_hash_{i}".encode('utf-8')
+        salt = os.urandom(16)
+        hashed = hashlib.pbkdf2_hmac('sha256', password, salt, iterations)
+        hashed_results.append(hashed.hex())
+    result = len(hashed_results)
     
     duration_ms = (time.time() - start_time) * 1000
     

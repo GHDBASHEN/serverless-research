@@ -21,8 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    import hashlib\n        for i in range(size * 100): hashlib.md5(str(i).encode()).hexdigest()\n
-    
+    import hashlib
+    for i in range(size * 100): hashlib.sha1(str(i).encode()).hexdigest()
     duration_ms = (time.time() - start_time) * 1000
     
     return {

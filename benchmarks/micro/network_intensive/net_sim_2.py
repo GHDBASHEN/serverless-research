@@ -21,7 +21,7 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    time.sleep(min(size * 0.002, 2))\n
+    time.sleep(min(size * 0.002, 2))
     
     duration_ms = (time.time() - start_time) * 1000
     

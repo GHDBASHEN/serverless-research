@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    j = json.dumps([{'id': i} for i in range(size * 100)])\n        val = len(json.loads(j))\n
+    j = json.dumps([{'id': i} for i in range(size * 100)])
+    val = len(json.loads(j))
     
     duration_ms = (time.time() - start_time) * 1000
     

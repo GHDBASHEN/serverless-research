@@ -21,7 +21,9 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    d = {}\n        for i in range(size * 1000): d[f'key_{i}'] = {'nested': i}\n
+    d = {}
+    for i in range(size * 1000): 
+        d[f'key_{i}'] = {'nested': i}
     
     duration_ms = (time.time() - start_time) * 1000
     

@@ -21,7 +21,7 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    arr = [i for i in range(size * 10000)]\n
+    arr = [i for i in range(size * 10000)]
     
     duration_ms = (time.time() - start_time) * 1000
     

@@ -21,7 +21,29 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    # Macro benchmark: data processing\n        import string\n        def generate_payload(num_records):\n            records = []\n            for i in range(num_records):\n                records.append({\n                    "id": i,\n                    "uuid": "".join(random.choices(string.ascii_letters + string.digits, k=16)),\n                    "amount": random.uniform(10.0, 1000.0),\n                    "status": random.choice(["PENDING", "COMPLETED", "FAILED"]),\n                    "metadata": {"source": "web", "tags": ["sale", "refund", "subscription"]}\n                })\n            return json.dumps({"batch_id": "test_batch", "records": records})\n        \n        payload_str = generate_payload(size)\n        data = json.loads(payload_str)\n        processed = []\n        for record in data["records"]:\n            if record["status"] == "COMPLETED":\n                processed.append({\n                    "id": record["id"],\n                    "value": round(record["amount"] * 1.05, 2), # Add 5% tax\n                })\n        result = json.dumps({"processed_count": len(processed), "data": processed})\n        
+    import string
+    def generate_payload(num_records):
+        records = []
+        for i in range(num_records):
+            records.append({
+                "id": i,
+                "uuid": "".join(random.choices(string.ascii_letters + string.digits, k=16)),
+                "amount": random.uniform(10.0, 1000.0),
+                "status": random.choice(["PENDING", "COMPLETED", "FAILED"]),
+                "metadata": {"source": "web", "tags": ["sale", "refund", "subscription"]}
+            })
+        return json.dumps({"batch_id": "test_batch", "records": records})
+    
+    payload_str = generate_payload(size)
+    data = json.loads(payload_str)
+    processed = []
+    for record in data["records"]:
+        if record["status"] == "COMPLETED":
+            processed.append({
+                "id": record["id"],
+                "value": round(record["amount"] * 1.05, 2), # Add 5% tax
+            })
+    result = json.dumps({"processed_count": len(processed), "data": processed})
     
     duration_ms = (time.time() - start_time) * 1000
     

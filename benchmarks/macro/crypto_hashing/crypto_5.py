@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    import hashlib\n        hashlib.pbkdf2_hmac('sha256', b'pass', b'salt', size * 100)\n
+    import hashlib
+    for i in range(size * 100): hashlib.pbkdf2_hmac('sha256', b'pass', b'salt', size * 100)
     
     duration_ms = (time.time() - start_time) * 1000
     

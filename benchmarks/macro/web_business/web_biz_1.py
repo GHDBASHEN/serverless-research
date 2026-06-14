@@ -21,7 +21,8 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    cart = [{'price': random.random()*100, 'qty': random.randint(1,5)} for _ in range(size * 10)]\n        val = sum(i['price'] * i['qty'] for i in cart)\n
+    cart = [{'price': random.random()*100, 'qty': random.randint(1,5)} for _ in range(size * 10)]
+    val = sum(i['price'] * i['qty'] for i in cart)
     
     duration_ms = (time.time() - start_time) * 1000
     

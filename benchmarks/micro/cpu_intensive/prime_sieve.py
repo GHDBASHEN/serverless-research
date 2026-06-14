@@ -21,7 +21,17 @@ def handle(event, context):
     size = int(payload.get('size', 100))
     result = None
     
-    N = size\n        if N < 2:\n            result = 0\n        else:\n            primes = [True] * (N + 1)\n            primes[0] = primes[1] = False\n            for i in range(2, int(math.sqrt(N)) + 1):\n                if primes[i]:\n                    for j in range(i*i, N + 1, i):\n                        primes[j] = False\n            result = sum(primes)\n            
+    N = size
+    if N < 2:
+        result = 0
+    else:
+        primes = [True] * (N + 1)
+        primes[0] = primes[1] = False
+        for i in range(2, int(math.sqrt(N)) + 1):
+            if primes[i]:
+                for j in range(i*i, N + 1, i):
+                    primes[j] = False
+        result = sum(primes)
     
     duration_ms = (time.time() - start_time) * 1000
     
