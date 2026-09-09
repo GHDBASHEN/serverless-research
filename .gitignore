@@ -6,7 +6,8 @@ google/terraform/.terraform
 
 # Machine Learning Models
 models/*.onnx
-/models
+/models/serverless_cost_model.joblib
+/models/serverless_duration_model.joblib
 # Python
 __pycache__/
 *.py[cod]
