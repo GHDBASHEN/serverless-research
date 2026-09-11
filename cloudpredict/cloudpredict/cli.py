@@ -111,15 +111,26 @@ def analyze_project(path):
     runtime = 'nodejs' if js_count > py_count else 'python'
     workload = 'cpu_math_2_xs_v1' # default
     
-    if 'import json' in code_text or 'require("json")' in code_text or 'json.parse' in code_text:
-        workload = 'json_transform_xs_v1'
-    elif 'hashlib' in code_text or 'crypto' in code_text:
+    # Priority 1: Heavy Database / Web Business Logic
+    if any(kw in code_text for kw in ['boto3', 'dynamodb', 'pymongo', 'sql', 'mysql', 'postgres', 'sqlalchemy', 'django', 'flask', 'express', 'fastapi', 'spring', 'mongoose', 'sequelize', 'redis', 'cassandra', 'psycopg2', 'prisma', 'typeorm', 'knex', 'pg', 'sqlite3', 'mongodb', 'couchdb', 'mariadb', 'oracle', 'cosmosdb']):
+        workload = 'web_biz_1_xs_v1'
+    # Priority 2: Data Processing
+    elif any(kw in code_text for kw in ['pandas', 'dataframe', 'csv', 'spark', 'hadoop', 'dask', 'pyspark', 'beautifulsoup', 'lxml', 'parquet', 'avro', 'openpyxl', 'xlrd', 'xml.etree', 'xml2js', 'cheerio', 'polars', 'pyarrow', 'dbt', 'airflow', 'luigi', 'celery']):
+        workload = 'data_proc_1_xs_v1'
+    # Priority 3: Cryptography
+    elif any(kw in code_text for kw in ['hashlib', 'crypto', 'bcrypt', 'hmac', 'rsa', 'argon2', 'scrypt', 'pbkdf2', 'jwt', 'jsonwebtoken', 'pyjwt', 'cryptography', 'pycryptodome', 'tls', 'ssl', 'aes', 'des', 'sha256', 'md5']):
         workload = 'crypto_hash_xs_v1'
-    elif 'open(' in code_text or 'fs.read' in code_text or 'fs.write' in code_text:
-        workload = 'file_io_xs_v1'
-    elif 'request' in code_text or 'http' in code_text or 'axios' in code_text or 'fetch(' in code_text:
+    # Priority 4: Network / External APIs
+    elif any(kw in code_text for kw in ['request', 'http', 'axios', 'fetch(', 'urllib', 'aiohttp', 'httpx', 'got', 'superagent', 'node-fetch', 'socket.io', 'websockets', 'grpc', 'graphql', 'apollo', 'xmlhttprequest', 'urllib3', 'curl']):
         workload = 'net_sim_1_xs_v1'
-    elif 'numpy' in code_text or 'math' in code_text:
+    # Priority 5: File I/O
+    elif any(kw in code_text for kw in ['open(', 'fs.read', 'fs.write', 'pathlib', 'shutil', 'os.path', 'fs-extra', 'fs.promises', 'stream', 'filereader', 'filewriter', 'tempfile', 'glob', 'tarfile', 'zipfile', 'fs.append', 'fs.unlink']):
+        workload = 'file_io_xs_v1'
+    # Priority 6: Basic JSON Transformation
+    elif any(kw in code_text for kw in ['import json', 'require("json")', 'json.parse', 'json.dumps', 'json.stringify', 'ujson', 'orjson', 'simplejson', 'pydantic']):
+        workload = 'json_transform_xs_v1'
+    # Priority 7: CPU / Math operations
+    elif any(kw in code_text for kw in ['numpy', 'math', 'scipy', 'scikit-learn', 'sklearn', 'tensorflow', 'pytorch', 'keras', 'statsmodels', 'numba', 'sympy', 'tensor', 'matrix', 'neural', 'math.', 'math(']):
         workload = 'cpu_math_2_xs_v1'
         
     return runtime, workload
