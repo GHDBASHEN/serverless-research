@@ -103,6 +103,11 @@ def analyze_project(path):
         except Exception as e:
             pass
             
+    if py_count == 0 and js_count == 0:
+        print(f"Error: No Python (.py) or Node.js (.js) files found in '{path}'.")
+        print("CloudPredict requires code files to analyze the runtime and workload.")
+        sys.exit(1)
+            
     runtime = 'nodejs' if js_count > py_count else 'python'
     workload = 'cpu_math_2_xs_v1' # default
     
