@@ -6,7 +6,7 @@ Requires-Dist: pandas
 Requires-Dist: joblib
 Requires-Dist: scikit-learn==1.5.0
 Requires-Dist: lightgbm
-Requires-Dist: xgboost
+Requires-Dist: xgboost==1.7.6
 Requires-Dist: tabulate
 Dynamic: requires-dist
 Dynamic: summary

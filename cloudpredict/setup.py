@@ -14,7 +14,7 @@ setup(
         'joblib',
         'scikit-learn==1.5.0',  # pinned: shipped .pkl models were trained on this version
         'lightgbm',
-        'xgboost',
+        'xgboost==1.7.6',       # pinned: prevents UserWarning about older serialized model
         'tabulate'
     ],
     entry_points={

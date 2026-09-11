@@ -2,5 +2,5 @@ pandas
 joblib
 scikit-learn==1.5.0
 lightgbm
-xgboost
+xgboost==1.7.6
 tabulate
