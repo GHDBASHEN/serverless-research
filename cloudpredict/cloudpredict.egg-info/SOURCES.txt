@@ -1,0 +1,14 @@
+MANIFEST.in
+README.md
+setup.py
+cloudpredict/__init__.py
+cloudpredict/cli.py
+cloudpredict/predict.py
+cloudpredict.egg-info/PKG-INFO
+cloudpredict.egg-info/SOURCES.txt
+cloudpredict.egg-info/dependency_links.txt
+cloudpredict.egg-info/entry_points.txt
+cloudpredict.egg-info/requires.txt
+cloudpredict.egg-info/top_level.txt
+cloudpredict/models/best_cost_model_RandomForest.pkl
+cloudpredict/models/best_duration_model_XGBoost.pkl
