@@ -4,7 +4,12 @@ import pandas as pd
 import glob
 import os
 import sys
+import json
+import time
 import warnings
+warnings.filterwarnings('ignore', category=UserWarning, module='sklearn')
+warnings.filterwarnings('ignore', category=UserWarning, module='xgboost')
+warnings.filterwarnings('ignore', category=FutureWarning)
 
 # The exact 54 features the models were trained on
 FEATURE_COLUMNS = [
@@ -78,40 +83,97 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
         
     return pd.DataFrame([features])
 
+def get_confidence_score(model, df_features):
+    """Calculate prediction confidence using tree variance (for tree-based models)."""
+    try:
+        # Convert to numpy to avoid sklearn feature name warnings
+        X = df_features.values
+        
+        if hasattr(model, 'estimators_'):
+            # For Random Forest / ensemble models: use variance across individual tree predictions
+            tree_preds = [tree.predict(X)[0] for tree in model.estimators_]
+            mean_pred = sum(tree_preds) / len(tree_preds)
+            variance = sum((p - mean_pred) ** 2 for p in tree_preds) / len(tree_preds)
+            std_dev = variance ** 0.5
+            cv = std_dev / abs(mean_pred) if mean_pred != 0 else 1.0
+            confidence = max(0, min(100, (1 - cv) * 100))
+            return confidence, std_dev
+        elif hasattr(model, 'get_booster'):
+            # For XGBoost: use prediction spread across boosted tree subsets
+            import numpy as np
+            booster = model.get_booster()
+            import xgboost as xgb
+            # DMatrix must have feature names matching training data
+            dmatrix = xgb.DMatrix(df_features)
+            
+            # Get total number of trees (compatible with older xgb versions)
+            try:
+                n_trees = int(booster.num_boosted_rounds())
+            except AttributeError:
+                n_trees = len(booster.get_dump())
+            
+            pred = float(model.predict(df_features)[0])
+            
+            if n_trees > 10:
+                step = max(1, n_trees // 10)
+                partial_preds = []
+                for i in range(step, n_trees + 1, step):
+                    p = booster.predict(dmatrix, ntree_limit=i)
+                    partial_preds.append(float(p[0]))
+                std_dev = float(np.std(partial_preds))
+                cv = std_dev / abs(pred) if pred != 0 else 1.0
+                confidence = max(0, min(100, (1 - cv) * 100))
+                return confidence, std_dev
+            return None, None
+        else:
+            return None, None
+    except Exception:
+        return None, None
+
 def analyze_project(path):
     """Heuristically analyze a script file or project directory to guess runtime and workload."""
     code_text = ""
     py_count = 0
     js_count = 0
+    java_count = 0
+    go_count = 0
     
     if os.path.isfile(path):
         files = [path]
     else:
         files = []
         for root, dirs, fnames in os.walk(path):
-            if any(ignore in root for ignore in ['.git', 'node_modules', 'venv', '__pycache__', 'env']):
+            if any(ignore in root for ignore in ['.git', 'node_modules', 'venv', '__pycache__', 'env', 'target', 'build', 'dist']):
                 continue
             for f in fnames:
-                if f.endswith('.py') or f.endswith('.js'):
+                if f.endswith(('.py', '.js', '.java', '.go')):
                     files.append(os.path.join(root, f))
                     
     for f in files:
         ext = os.path.splitext(f)[1].lower()
         if ext == '.py': py_count += 1
         elif ext == '.js': js_count += 1
+        elif ext == '.java': java_count += 1
+        elif ext == '.go': go_count += 1
         
         try:
             with open(f, 'r', encoding='utf-8') as file:
                 code_text += file.read().lower() + "\n"
-        except Exception as e:
+        except Exception:
             pass
             
-    if py_count == 0 and js_count == 0:
-        print(f"Error: No Python (.py) or Node.js (.js) files found in '{path}'.")
+    total = py_count + js_count + java_count + go_count
+    if total == 0:
+        print(f"Error: No Python (.py), Node.js (.js), Java (.java), or Go (.go) files found in '{path}'.")
         print("CloudPredict requires code files to analyze the runtime and workload.")
         sys.exit(1)
             
-    runtime = 'nodejs' if js_count > py_count else 'python'
+    # Determine runtime by majority file type
+    counts = {'python': py_count, 'nodejs': js_count, 'java': java_count, 'go': go_count}
+    runtime = max(counts, key=counts.get)
+    # Map java/go to 'other' for model compatibility (model only knows python/nodejs)
+    runtime_for_model = runtime if runtime in ['python', 'nodejs'] else 'other'
+    
     workload = 'cpu_math_2_xs_v1' # default
     
     import re
@@ -119,62 +181,167 @@ def analyze_project(path):
         return any(re.search(rf'\b{re.escape(kw)}\b', code_text) for kw in kw_list)
         
     # Priority 1: Heavy Database / Web Business Logic
-    if has_kw(['boto3', 'dynamodb', 'pymongo', 'sql', 'mysql', 'postgres', 'sqlalchemy', 'django', 'flask', 'express', 'fastapi', 'spring', 'mongoose', 'sequelize', 'redis', 'cassandra', 'psycopg2', 'prisma', 'typeorm', 'knex', 'pg', 'sqlite3', 'mongodb', 'couchdb', 'mariadb', 'oracle', 'cosmosdb']):
+    if has_kw(['boto3', 'dynamodb', 'pymongo', 'sql', 'mysql', 'postgres', 'sqlalchemy', 'django', 'flask', 'express', 'fastapi', 'spring', 'mongoose', 'sequelize', 'redis', 'cassandra', 'psycopg2', 'prisma', 'typeorm', 'knex', 'pg', 'sqlite3', 'mongodb', 'couchdb', 'mariadb', 'oracle', 'cosmosdb', 'gin', 'echo', 'fiber', 'gorm', 'jdbc', 'hibernate', 'jpa', 'servlet']):
         workload = 'web_biz_1_xs_v1'
     # Priority 2: Data Processing
-    elif has_kw(['pandas', 'dataframe', 'csv', 'spark', 'hadoop', 'dask', 'pyspark', 'beautifulsoup', 'lxml', 'parquet', 'avro', 'openpyxl', 'xlrd', 'xml.etree', 'xml2js', 'cheerio', 'polars', 'pyarrow', 'dbt', 'airflow', 'luigi', 'celery']):
+    elif has_kw(['pandas', 'dataframe', 'csv', 'spark', 'hadoop', 'dask', 'pyspark', 'beautifulsoup', 'lxml', 'parquet', 'avro', 'openpyxl', 'xlrd', 'xml.etree', 'xml2js', 'cheerio', 'polars', 'pyarrow', 'dbt', 'airflow', 'luigi', 'celery', 'jackson', 'gson', 'encoding/json', 'encoding/csv']):
         workload = 'data_proc_1_xs_v1'
     # Priority 3: Cryptography
-    elif has_kw(['hashlib', 'crypto', 'bcrypt', 'hmac', 'rsa', 'argon2', 'scrypt', 'pbkdf2', 'jwt', 'jsonwebtoken', 'pyjwt', 'cryptography', 'pycryptodome', 'tls', 'ssl', 'aes', 'des', 'sha256', 'md5']):
+    elif has_kw(['hashlib', 'crypto', 'bcrypt', 'hmac', 'rsa', 'argon2', 'scrypt', 'pbkdf2', 'jwt', 'jsonwebtoken', 'pyjwt', 'cryptography', 'pycryptodome', 'tls', 'ssl', 'aes', 'des', 'sha256', 'md5', 'messagedigest', 'javax.crypto', 'crypto/sha256', 'crypto/aes']):
         workload = 'crypto_hash_xs_v1'
     # Priority 4: Network / External APIs
-    elif has_kw(['request', 'http', 'axios', 'fetch', 'urllib', 'aiohttp', 'httpx', 'got', 'superagent', 'node-fetch', 'socket.io', 'websockets', 'grpc', 'graphql', 'apollo', 'xmlhttprequest', 'urllib3', 'curl']):
+    elif has_kw(['request', 'http', 'axios', 'fetch', 'urllib', 'aiohttp', 'httpx', 'got', 'superagent', 'node-fetch', 'socket.io', 'websockets', 'grpc', 'graphql', 'apollo', 'xmlhttprequest', 'urllib3', 'curl', 'okhttp', 'retrofit', 'net/http', 'httputil']):
         workload = 'net_sim_1_xs_v1'
-    # Priority 5: File I/O
-    elif has_kw(['open', 'fs.read', 'fs.write', 'pathlib', 'shutil', 'os.path', 'fs-extra', 'fs.promises', 'stream', 'filereader', 'filewriter', 'tempfile', 'glob', 'tarfile', 'zipfile', 'fs.append', 'fs.unlink']):
+    # Priority 5: Scientific Computing
+    elif has_kw(['numpy', 'scipy', 'scikit-learn', 'sklearn', 'tensorflow', 'pytorch', 'keras', 'statsmodels', 'numba', 'sympy', 'tensor', 'neural', 'gonum', 'apache commons math']):
+        workload = 'sci_1_xs_v1'
+    # Priority 6: File I/O
+    elif has_kw(['open', 'fs.read', 'fs.write', 'pathlib', 'shutil', 'os.path', 'fs-extra', 'fs.promises', 'stream', 'filereader', 'filewriter', 'tempfile', 'glob', 'tarfile', 'zipfile', 'fs.append', 'fs.unlink', 'bufferedreader', 'fileoutputstream', 'os.open', 'os.create', 'ioutil']):
         workload = 'file_io_xs_v1'
-    # Priority 6: Basic JSON Transformation
+    # Priority 7: Basic JSON Transformation
     elif has_kw(['import json', 'require("json")', 'json.parse', 'json.dumps', 'json.stringify', 'ujson', 'orjson', 'simplejson', 'pydantic']):
         workload = 'json_transform_xs_v1'
-    # Priority 7: CPU / Math operations
-    elif has_kw(['numpy', 'math', 'scipy', 'scikit-learn', 'sklearn', 'tensorflow', 'pytorch', 'keras', 'statsmodels', 'numba', 'sympy', 'tensor', 'matrix', 'neural']):
+    # Priority 8: CPU / Math operations
+    elif has_kw(['math', 'matrix', 'fibonacci', 'prime', 'factorial', 'biginteger', 'math/big']):
         workload = 'cpu_math_2_xs_v1'
         
-    return runtime, workload
+    return runtime, runtime_for_model, workload
+
+def format_output(results, output_format, output_file=None):
+    """Export results to JSON or CSV file."""
+    import numpy as np
+    
+    class NumpyEncoder(json.JSONEncoder):
+        def default(self, obj):
+            if isinstance(obj, (np.integer,)): return int(obj)
+            if isinstance(obj, (np.floating,)): return float(obj)
+            if isinstance(obj, np.ndarray): return obj.tolist()
+            return super().default(obj)
+    
+    if output_format == 'json':
+        content = json.dumps(results, indent=2, cls=NumpyEncoder)
+        if output_file:
+            with open(output_file, 'w') as f:
+                f.write(content)
+            print(f"\n  Results exported to: {output_file}")
+        else:
+            fname = 'cloudpredict_results.json'
+            with open(fname, 'w') as f:
+                f.write(content)
+            print(f"\n  Results exported to: {fname}")
+    elif output_format == 'csv':
+        df = pd.DataFrame(results if isinstance(results, list) else [results])
+        fname = output_file or 'cloudpredict_results.csv'
+        df.to_csv(fname, index=False)
+        print(f"\n  Results exported to: {fname}")
 
 def run_predict(args, models_dir):
     duration_model, cost_model, d_name, c_name = load_models(models_dir)
     
-    df_features = create_feature_vector(
-        args.platform, args.runtime, args.region, args.cold_start, args.input_size, args.workload
-    )
+    platforms_to_test = ['aws', 'azure', 'gcp'] if args.platform == 'all' else [args.platform]
     
-    pred_duration = duration_model.predict(df_features)[0]
-    pred_cost = cost_model.predict(df_features)[0]
+    results = []
     
-    print("\n" + "=" * 55)
-    print("  CloudPredict - Manual Forecaster ")
-    print("=" * 55)
+    for plat in platforms_to_test:
+        df_features = create_feature_vector(
+            plat, args.runtime, args.region, args.cold_start, args.input_size, args.workload
+        )
+        
+        pred_duration = duration_model.predict(df_features)[0]
+        pred_cost = cost_model.predict(df_features)[0]
+        
+        result_entry = {
+            'platform': plat.upper(),
+            'runtime': args.runtime,
+            'region': args.region,
+            'memory': args.memory,
+            'cold_start': args.cold_start,
+            'input_size': args.input_size,
+            'workload': args.workload,
+            'predicted_duration_ms': round(pred_duration, 2),
+            'predicted_cost_usd': round(pred_cost, 8)
+        }
+        
+        # Confidence scoring
+        if args.confidence:
+            dur_conf, dur_std = get_confidence_score(duration_model, df_features)
+            cost_conf, cost_std = get_confidence_score(cost_model, df_features)
+            result_entry['duration_confidence'] = round(dur_conf, 1) if dur_conf is not None else 'N/A'
+            result_entry['duration_std_dev'] = round(dur_std, 2) if dur_std is not None else 'N/A'
+            result_entry['cost_confidence'] = round(cost_conf, 1) if cost_conf is not None else 'N/A'
+        
+        results.append(result_entry)
+    
+    # Sort by duration if comparing all platforms
+    if args.platform == 'all':
+        results = sorted(results, key=lambda x: x['predicted_duration_ms'])
+    
+    # Print results
+    print("\n" + "=" * 65)
+    if args.platform == 'all':
+        print("  CloudPredict - A/B/C Platform Comparison")
+    else:
+        print("  CloudPredict - Manual Forecaster")
+    print("=" * 65)
     print(f"  Configuration:")
-    print(f"    - Platform   : {args.platform.upper()}")
     print(f"    - Runtime    : {args.runtime}")
     print(f"    - Region     : {args.region}")
+    print(f"    - Memory     : {args.memory} MB")
     print(f"    - Cold Start : {'Yes' if args.cold_start else 'No'}")
     print(f"    - Input Size : {args.input_size}")
     print(f"    - Workload   : {args.workload}")
-    print("-" * 55)
-    print(f"  Predictions:")
-    print(f"    - Expected Duration : {pred_duration:8.2f} ms")
-    print(f"    - Expected Cost     : ${pred_cost:8.6f}")
-    print("-" * 55)
+    print("-" * 65)
+    
+    if args.platform == 'all':
+        # Table view for comparison
+        print(f"  {'#':<4} {'Platform':<10} {'Duration':<16} {'Cost':<16}", end="")
+        if args.confidence:
+            print(f" {'Confidence':<12}", end="")
+        print()
+        print("-" * 65)
+        
+        fastest = results[0]['platform']
+        cheapest = min(results, key=lambda x: x['predicted_cost_usd'])['platform']
+        
+        for idx, res in enumerate(results):
+            marker = ""
+            if res['platform'] == fastest: marker += " [FASTEST]"
+            if res['platform'] == cheapest: marker += " [CHEAPEST]"
+            
+            line = f"  {idx+1:<4} {res['platform']:<10} {res['predicted_duration_ms']:>8.2f} ms     ${res['predicted_cost_usd']:.8f}"
+            if args.confidence:
+                conf = res.get('duration_confidence', 'N/A')
+                conf_str = f"{conf}%" if isinstance(conf, (int, float)) else conf
+                line += f"  {conf_str:<12}"
+            line += marker
+            print(line)
+    else:
+        res = results[0]
+        print(f"  Platform        : {res['platform']}")
+        print(f"  Predicted Duration : {res['predicted_duration_ms']:8.2f} ms")
+        print(f"  Predicted Cost     : ${res['predicted_cost_usd']:.8f}")
+        if args.confidence:
+            conf = res.get('duration_confidence', 'N/A')
+            std = res.get('duration_std_dev', 'N/A')
+            print(f"  Duration Confidence: {conf}%")
+            if isinstance(std, (int, float)):
+                print(f"  Duration Std Dev   : ±{std:.2f} ms")
+    
+    print("-" * 65)
     print(f"  Powered by: {d_name} (Latency) | {c_name} (Cost)")
-    print("=" * 55 + "\n")
+    print("=" * 65 + "\n")
+    
+    # Export if requested
+    if args.output:
+        format_type = args.output
+        output_file = args.output_file
+        format_output(results, format_type, output_file)
 
 def run_analyze(args, models_dir):
     duration_model, cost_model, d_name, c_name = load_models(models_dir)
     
     print(f"\nAnalyzing project: {args.path}...")
-    runtime, workload = analyze_project(args.path)
+    runtime, runtime_for_model, workload = analyze_project(args.path)
     
     print(f"Detected Runtime : {runtime}")
     print(f"Inferred Workload: {workload}")
@@ -185,40 +352,227 @@ def run_analyze(args, models_dir):
     
     for plat in platforms:
         # Evaluate Warm Start
-        df_warm = create_feature_vector(plat, runtime, 'us-east-1', False, args.input_size, workload)
+        df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload)
         warm_dur = duration_model.predict(df_warm)[0]
         warm_cost = cost_model.predict(df_warm)[0]
         
         # Evaluate Cold Start
-        df_cold = create_feature_vector(plat, runtime, 'us-east-1', True, args.input_size, workload)
+        df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload)
         cold_dur = duration_model.predict(df_cold)[0]
         
-        results.append({
+        result_entry = {
             'Platform': plat.upper(),
-            'Duration (Warm)': warm_dur,
-            'Duration (Cold)': cold_dur,
-            'Cost per Exec': warm_cost
-        })
+            'Duration (Warm)': round(warm_dur, 2),
+            'Duration (Cold)': round(cold_dur, 2),
+            'Cost per Exec': round(warm_cost, 8)
+        }
+        
+        # Confidence scoring
+        if args.confidence:
+            dur_conf, _ = get_confidence_score(duration_model, df_warm)
+            result_entry['Confidence'] = round(dur_conf, 1) if dur_conf is not None else 'N/A'
+        
+        results.append(result_entry)
         
     # Sort to find best
     fastest = min(results, key=lambda x: x['Duration (Warm)'])['Platform']
     cheapest = min(results, key=lambda x: x['Cost per Exec'])['Platform']
     
-    print("=" * 75)
-    print(f"{'Platform':<12} | {'Warm Duration':<15} | {'Cold Duration':<15} | {'Estimated Cost':<15}")
-    print("-" * 75)
+    print("=" * 85)
+    header = f"{'Platform':<12} | {'Warm Duration':<15} | {'Cold Duration':<15} | {'Estimated Cost':<15}"
+    if args.confidence:
+        header += f" | {'Confidence':<12}"
+    print(header)
+    print("-" * 85)
     for res in results:
         dur_warm_str = f"{res['Duration (Warm)']:.2f} ms"
         dur_cold_str = f"{res['Duration (Cold)']:.2f} ms"
-        cost_str = f"${res['Cost per Exec']:.6f}"
+        cost_str = f"${res['Cost per Exec']:.8f}"
         
         marker = ""
         if res['Platform'] == fastest: marker += " [FASTEST]"
         if res['Platform'] == cheapest: marker += " [CHEAPEST]"
-            
-        print(f"{res['Platform']:<12} | {dur_warm_str:<15} | {dur_cold_str:<15} | {cost_str:<15} {marker}")
-    print("=" * 75)
+        
+        line = f"{res['Platform']:<12} | {dur_warm_str:<15} | {dur_cold_str:<15} | {cost_str:<15}"
+        if args.confidence:
+            conf = res.get('Confidence', 'N/A')
+            conf_str = f"{conf}%" if isinstance(conf, (int, float)) else conf
+            line += f" | {conf_str:<12}"
+        line += marker
+        print(line)
+    print("=" * 85)
     print(f"\nRecommendation: Deploy to {cheapest} for best cost, or {fastest} for best performance.\n")
+    
+    # Export if requested
+    if args.output:
+        export_data = {
+            'detected_runtime': runtime,
+            'inferred_workload': workload,
+            'results': results,
+            'recommendation': {
+                'fastest': fastest,
+                'cheapest': cheapest
+            }
+        }
+        format_output(export_data if args.output == 'json' else results, args.output, args.output_file)
+
+def run_benchmark(args, models_dir):
+    """Run a local micro-benchmark and use measured metrics as input for prediction."""
+    duration_model, cost_model, d_name, c_name = load_models(models_dir)
+    
+    print("\n" + "=" * 65)
+    print("  CloudPredict - Local Micro-Benchmark")
+    print("=" * 65)
+    
+    # Determine what to benchmark
+    target_path = args.path
+    if not os.path.exists(target_path):
+        print(f"Error: Path '{target_path}' does not exist.")
+        sys.exit(1)
+    
+    # Detect runtime
+    runtime, runtime_for_model, workload = analyze_project(target_path)
+    print(f"  Detected Runtime : {runtime}")
+    print(f"  Inferred Workload: {workload}")
+    print(f"  Iterations       : {args.iterations}")
+    print("-" * 65)
+    
+    # Run the benchmark
+    durations = []
+    if os.path.isfile(target_path):
+        print(f"  Benchmarking: {os.path.basename(target_path)}")
+        
+        if target_path.endswith('.py'):
+            import subprocess
+            for i in range(args.iterations):
+                start = time.perf_counter()
+                try:
+                    result = subprocess.run(
+                        [sys.executable, target_path],
+                        capture_output=True, timeout=30
+                    )
+                    elapsed = (time.perf_counter() - start) * 1000  # ms
+                    durations.append(elapsed)
+                    print(f"    Run {i+1}/{args.iterations}: {elapsed:.2f} ms", end="")
+                    if result.returncode != 0:
+                        print(" (non-zero exit)", end="")
+                    print()
+                except subprocess.TimeoutExpired:
+                    print(f"    Run {i+1}/{args.iterations}: TIMEOUT (30s)")
+                except Exception as e:
+                    print(f"    Run {i+1}/{args.iterations}: ERROR - {e}")
+        elif target_path.endswith('.js'):
+            import subprocess
+            for i in range(args.iterations):
+                start = time.perf_counter()
+                try:
+                    result = subprocess.run(
+                        ['node', target_path],
+                        capture_output=True, timeout=30
+                    )
+                    elapsed = (time.perf_counter() - start) * 1000
+                    durations.append(elapsed)
+                    print(f"    Run {i+1}/{args.iterations}: {elapsed:.2f} ms")
+                except subprocess.TimeoutExpired:
+                    print(f"    Run {i+1}/{args.iterations}: TIMEOUT (30s)")
+                except Exception as e:
+                    print(f"    Run {i+1}/{args.iterations}: ERROR - {e}")
+        else:
+            print(f"  Cannot directly benchmark .{target_path.split('.')[-1]} files. Use Python or Node.js scripts.")
+            sys.exit(1)
+    else:
+        # If directory, find and run the main entry point
+        main_files = []
+        for f in os.listdir(target_path):
+            if f in ['main.py', 'handler.py', 'app.py', 'index.js', 'main.js']:
+                main_files.append(os.path.join(target_path, f))
+        
+        if not main_files:
+            print("  Could not find a main entry point (main.py, handler.py, app.py, index.js).")
+            print("  Please specify a file path directly.")
+            sys.exit(1)
+        
+        entry = main_files[0]
+        print(f"  Entry point: {os.path.basename(entry)}")
+        
+        import subprocess
+        cmd = [sys.executable, entry] if entry.endswith('.py') else ['node', entry]
+        for i in range(args.iterations):
+            start = time.perf_counter()
+            try:
+                result = subprocess.run(cmd, capture_output=True, timeout=30, cwd=target_path)
+                elapsed = (time.perf_counter() - start) * 1000
+                durations.append(elapsed)
+                print(f"    Run {i+1}/{args.iterations}: {elapsed:.2f} ms")
+            except Exception as e:
+                print(f"    Run {i+1}/{args.iterations}: ERROR - {e}")
+    
+    if not durations:
+        print("\n  No successful runs. Cannot generate predictions.")
+        sys.exit(1)
+    
+    # Calculate statistics
+    import statistics
+    avg_duration = statistics.mean(durations)
+    std_duration = statistics.stdev(durations) if len(durations) > 1 else 0
+    min_duration = min(durations)
+    max_duration = max(durations)
+    
+    print("-" * 65)
+    print(f"  Local Benchmark Results:")
+    print(f"    Mean Duration : {avg_duration:.2f} ms")
+    print(f"    Std Deviation : {std_duration:.2f} ms")
+    print(f"    Min / Max     : {min_duration:.2f} / {max_duration:.2f} ms")
+    print("-" * 65)
+    
+    # Now predict for each platform using the measured local metrics
+    print(f"\n  Cloud Platform Predictions (based on local benchmark):\n")
+    
+    platforms = ['aws', 'azure', 'gcp']
+    results = []
+    
+    for plat in platforms:
+        df_features = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload)
+        pred_duration = duration_model.predict(df_features)[0]
+        pred_cost = cost_model.predict(df_features)[0]
+        
+        results.append({
+            'platform': plat.upper(),
+            'predicted_duration_ms': round(pred_duration, 2),
+            'predicted_cost_usd': round(pred_cost, 8)
+        })
+    
+    results = sorted(results, key=lambda x: x['predicted_duration_ms'])
+    fastest = results[0]['platform']
+    cheapest = min(results, key=lambda x: x['predicted_cost_usd'])['platform']
+    
+    for idx, res in enumerate(results):
+        marker = ""
+        if res['platform'] == fastest: marker += " [FASTEST]"
+        if res['platform'] == cheapest: marker += " [CHEAPEST]"
+        print(f"  #{idx+1} {res['platform']:<8} | {res['predicted_duration_ms']:>8.2f} ms | ${res['predicted_cost_usd']:.8f}{marker}")
+    
+    print("\n" + "=" * 65)
+    print(f"  Recommendation: {fastest} for speed, {cheapest} for cost.")
+    print("=" * 65 + "\n")
+    
+    # Export if requested
+    if args.output:
+        export_data = {
+            'benchmark': {
+                'path': target_path,
+                'runtime': runtime,
+                'workload': workload,
+                'iterations': args.iterations,
+                'mean_ms': round(avg_duration, 2),
+                'std_ms': round(std_duration, 2),
+                'min_ms': round(min_duration, 2),
+                'max_ms': round(max_duration, 2)
+            },
+            'predictions': results,
+            'recommendation': {'fastest': fastest, 'cheapest': cheapest}
+        }
+        format_output(export_data if args.output == 'json' else results, args.output, args.output_file)
 
 
 def main():
@@ -233,15 +587,30 @@ def main():
     predict_parser = subparsers.add_parser("predict", help="Manually predict performance for a specific configuration")
     predict_parser.add_argument('--input-size', type=float, default=1024, help="Input size processed by the function")
     predict_parser.add_argument('--cold-start', action='store_true', help="Flag to simulate a cold start execution")
-    predict_parser.add_argument('--platform', choices=['aws', 'azure', 'gcp'], default='aws', help="Cloud provider platform")
+    predict_parser.add_argument('--platform', choices=['aws', 'azure', 'gcp', 'all'], default='aws', help="Cloud provider platform (use 'all' for A/B/C comparison)")
     predict_parser.add_argument('--runtime', choices=['python', 'nodejs', 'other'], default='python', help="Programming language runtime")
     predict_parser.add_argument('--region', choices=['us-east-1', 'us-central1', 'other'], default='us-east-1', help="Deployment region")
     predict_parser.add_argument('--workload', type=str, default='cpu_math_2_xs_v1', help="Type of workload")
+    predict_parser.add_argument('--memory', type=int, default=256, help="Memory configuration in MB (e.g., 128, 256, 512, 1024)")
+    predict_parser.add_argument('--confidence', action='store_true', help="Show prediction confidence score based on model tree variance")
+    predict_parser.add_argument('--output', choices=['json', 'csv'], default=None, help="Export results to JSON or CSV file")
+    predict_parser.add_argument('--output-file', type=str, default=None, help="Custom output filename for exported results")
 
     # Subcommand: Analyze
     analyze_parser = subparsers.add_parser("analyze", help="Analyze a script or project folder and recommend the best cloud platform")
     analyze_parser.add_argument('path', type=str, help="Path to the script file or project directory (e.g., . or app.py)")
     analyze_parser.add_argument('--input-size', type=float, default=1024, help="Expected average input size in KB")
+    analyze_parser.add_argument('--confidence', action='store_true', help="Show prediction confidence score")
+    analyze_parser.add_argument('--output', choices=['json', 'csv'], default=None, help="Export results to JSON or CSV file")
+    analyze_parser.add_argument('--output-file', type=str, default=None, help="Custom output filename for exported results")
+    
+    # Subcommand: Benchmark
+    benchmark_parser = subparsers.add_parser("benchmark", help="Run a local micro-benchmark and predict cloud performance based on measured metrics")
+    benchmark_parser.add_argument('path', type=str, help="Path to the script file or project directory to benchmark")
+    benchmark_parser.add_argument('--iterations', type=int, default=5, help="Number of benchmark iterations to run")
+    benchmark_parser.add_argument('--input-size', type=float, default=1024, help="Expected average input size in KB")
+    benchmark_parser.add_argument('--output', choices=['json', 'csv'], default=None, help="Export results to JSON or CSV file")
+    benchmark_parser.add_argument('--output-file', type=str, default=None, help="Custom output filename for exported results")
     
     args = parser.parse_args()
     
@@ -254,6 +623,11 @@ def main():
             print(f"Error: Path '{args.path}' does not exist.")
             sys.exit(1)
         run_analyze(args, models_dir)
+    elif args.command == "benchmark":
+        if not os.path.exists(args.path):
+            print(f"Error: Path '{args.path}' does not exist.")
+            sys.exit(1)
+        run_benchmark(args, models_dir)
 
 if __name__ == '__main__':
     main()

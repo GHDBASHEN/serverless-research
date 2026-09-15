@@ -4,7 +4,7 @@ from cloudpredict.predict import predict_latency
 
 def run_validation():
     # Load dataset
-    data_path = 'd:/Projects/Research/serverless-research/data/raw/benchmark_results.csv'
+    data_path = 'd:/Projects/Research/serverless-research/data/raw/collected_dataset.csv'
     df = pd.read_csv(data_path)
     df = df[df['status'] == 'success']
     
