@@ -2,7 +2,7 @@ google/terraform/.terraform
 
 # Large Datasets
 *.csv
-*.json
+
 
 # Machine Learning Models
 models/*.onnx
