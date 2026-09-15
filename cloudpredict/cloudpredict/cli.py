@@ -482,13 +482,20 @@ def run_benchmark(args, models_dir):
             sys.exit(1)
     else:
         # If directory, find and run the main entry point
+        # Priority 1: well-known entry points
         main_files = []
         for f in os.listdir(target_path):
-            if f in ['main.py', 'handler.py', 'app.py', 'index.js', 'main.js']:
+            if f in ['main.py', 'handler.py', 'app.py', 'index.js', 'main.js', 'server.py', 'lambda_function.py', 'run.py']:
                 main_files.append(os.path.join(target_path, f))
         
+        # Priority 2: fall back to any .py or .js file in the directory
         if not main_files:
-            print("  Could not find a main entry point (main.py, handler.py, app.py, index.js).")
+            for f in sorted(os.listdir(target_path)):
+                if f.endswith(('.py', '.js')) and not f.startswith('__'):
+                    main_files.append(os.path.join(target_path, f))
+        
+        if not main_files:
+            print("  No Python (.py) or Node.js (.js) files found to benchmark.")
             print("  Please specify a file path directly.")
             sys.exit(1)
         
