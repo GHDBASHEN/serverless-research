@@ -48,14 +48,15 @@ def extract_features(file_path):
 
 def run_pipeline():
     # 1. Load Data
-    data_path = '../data/raw/benchmark_results.csv'
+    data_path = '../data/raw/collected_dataset.csv'
     if not os.path.exists(data_path):
-        data_path = 'data/raw/benchmark_results.csv'
+        data_path = 'data/raw/collected_dataset.csv'
         if not os.path.exists(data_path):
-             data_path = 'd:/Projects/Research/serverless-research/data/raw/benchmark_results.csv'
+             data_path = 'd:/Projects/Research/serverless-research/data/raw/collected_dataset.csv'
              
     print(f"Loading data from {data_path}...")
     df = pd.read_csv(data_path)
+    df['platform'] = df['platform'].replace('google', 'gcp')
     
     # Filter successes only for training
     df = df[df['status'] == 'success']

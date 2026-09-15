@@ -3,6 +3,20 @@ import pandas as pd
 import glob
 import os
 import json
+import numpy as np
+import onnxruntime as ort
+
+ONNX_DEFAULTS = {
+    'exec_std': 7015.638,
+    'mem_std': 365.881,
+    'cost_mean': 0.000023,
+    'input_size': 369.775,
+    'mem_config': 790.155,
+    'cyclomatic_complexity': 4.148,
+    'lines_of_code': 37.978,
+    'num_io_calls': 0.361,
+    'num_loops': 3.042
+}
 
 FEATURE_COLUMNS = [
     'input_size', 'is_cold_start', 'platform_azure', 'platform_google', 
@@ -44,6 +58,19 @@ def load_models():
     _cost_model = joblib.load(cost_models[0])
     return _duration_model, _cost_model
 
+def load_onnx_model(source, target):
+    source = source.lower()
+    target = target.lower()
+    if source == target:
+        return None
+    
+    models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'models')
+    onnx_path = os.path.join(models_dir, f'{source}_to_{target}_rf.onnx')
+    
+    if os.path.exists(onnx_path):
+        return ort.InferenceSession(onnx_path)
+    return None
+
 def create_feature_vector(platform, runtime, region, cold_start, input_size, workload):
     features = {col: 0 for col in FEATURE_COLUMNS}
     
@@ -77,6 +104,7 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
 def predict_latency(source, target, exec_mean, mem_mean, runtime):
     try:
         duration_model, cost_model = load_models()
+        onnx_session = load_onnx_model(source, target)
         
         # We predict for the target platform.
         # Since we don't have region, cold_start, input_size, workload from api, we use defaults.
@@ -90,7 +118,27 @@ def predict_latency(source, target, exec_mean, mem_mean, runtime):
             workload='cpu_math_2_xs_v1'
         )
         
-        predicted_latency = float(duration_model.predict(df_features)[0])
+        if onnx_session:
+            input_data = np.array([[
+                exec_mean,
+                ONNX_DEFAULTS['exec_std'],
+                mem_mean,
+                ONNX_DEFAULTS['mem_std'],
+                ONNX_DEFAULTS['cost_mean'],
+                ONNX_DEFAULTS['input_size'],
+                ONNX_DEFAULTS['mem_config'],
+                ONNX_DEFAULTS['cyclomatic_complexity'],
+                ONNX_DEFAULTS['lines_of_code'],
+                ONNX_DEFAULTS['num_io_calls'],
+                ONNX_DEFAULTS['num_loops'],
+                exec_mean
+            ]], dtype=np.float32)
+            
+            input_name = onnx_session.get_inputs()[0].name
+            predicted_latency = float(onnx_session.run(None, {input_name: input_data})[0][0][0])
+        else:
+            predicted_latency = float(duration_model.predict(df_features)[0])
+            
         p95_latency = predicted_latency * 1.2 # synthetic 95th
         predicted_cost = float(cost_model.predict(df_features)[0])
         
