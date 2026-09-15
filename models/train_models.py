@@ -1,3 +1,4 @@
+from pathlib import Path
 import pandas as pd
 import numpy as np
 import joblib
@@ -88,9 +89,14 @@ def train_and_evaluate(X, y, target_name, stratify_col, output_dir):
     return winning_model
 
 def main():
-    # File paths
-    dataset_path = r"D:\Projects\Research\serverless-research\data\ml_ready_dataset\ml_ready_dataset.csv"
-    output_dir = r"D:\Projects\Research\serverless-research\models"
+    # File paths (dynamically resolved relative to project root)
+    base_dir = Path(__file__).resolve().parent.parent
+    dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset.csv"
+    output_dir = base_dir / "models"
+    
+    # Fallback if running from a different relative context
+    if not dataset_path.exists():
+        dataset_path = Path("data/ml_ready_dataset/ml_ready_dataset.csv")
     
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)

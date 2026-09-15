@@ -1,8 +1,15 @@
+from pathlib import Path
 import pandas as pd
+
+# Resolve paths relative to repository root
+BASE_DIR = Path(__file__).resolve().parents[2]
+RAW_DATA_PATH = BASE_DIR / 'data' / 'raw' / 'collected_dataset.csv'
+if not RAW_DATA_PATH.exists():
+    RAW_DATA_PATH = Path('data/raw/collected_dataset.csv')
 
 # 1. Load the dataset and filter for successful runs
 print("Loading dataset...")
-df = pd.read_csv('./data/raw/benchmark_results.csv')
+df = pd.read_csv(RAW_DATA_PATH)
 df = df[df['status'] == 'success'].copy()
 
 # 2. Drop columns that the Machine Learning model DOES NOT need
@@ -33,5 +40,7 @@ print(df_encoded[new_platform_cols].head(3))
 print(f"\nTotal columns ready for ML: {len(df_encoded.columns)}")
 
 # 6. Save this "ML-Ready" dataset so we can use it in Step 4
-df_encoded.to_csv('data/ml_ready_dataset/ml_ready_dataset.csv', index=False)
-print("\nData preparation complete! Saved as 'ml_ready_dataset.csv'")
+out_path = BASE_DIR / 'data' / 'ml_ready_dataset' / 'ml_ready_dataset.csv'
+out_path.parent.mkdir(parents=True, exist_ok=True)
+df_encoded.to_csv(out_path, index=False)
+print(f"\nData preparation complete! Saved as '{out_path}'")
