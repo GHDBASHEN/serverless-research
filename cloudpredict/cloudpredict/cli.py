@@ -588,6 +588,29 @@ def run_benchmark(args, models_dir):
 
 
 def main():
+    import sys
+    if len(sys.argv) == 1:
+        print("\n" + "=" * 65)
+        print("  CloudPredict - Intelligent Serverless Decision Engine")
+        print("=" * 65)
+        print("  1. Analyze project (Recommend best cloud platform)")
+        print("  2. Predict performance (Manual configuration)")
+        print("  3. Run local micro-benchmark")
+        print("  4. Exit")
+        print("-" * 65)
+        choice = input("  Enter choice (1-4): ").strip()
+        if choice == '1':
+            path = input("  Enter project path (default: .): ").strip() or '.'
+            sys.argv.extend(['analyze', path])
+        elif choice == '2':
+            sys.argv.extend(['predict'])
+        elif choice == '3':
+            path = input("  Enter project path to benchmark (default: .): ").strip() or '.'
+            sys.argv.extend(['benchmark', path])
+        else:
+            sys.exit(0)
+        print()
+
     parser = argparse.ArgumentParser(
         description="CloudPredict CLI - Intelligent Serverless Decision Engine",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
