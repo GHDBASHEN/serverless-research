@@ -357,12 +357,12 @@ def run_analyze(args, models_dir):
     
     for plat in platforms:
         # Evaluate Warm Start
-        df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload)
+        df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload, memory=args.memory)
         warm_dur = duration_model.predict(df_warm)[0]
         warm_cost = cost_model.predict(df_warm)[0]
         
         # Evaluate Cold Start
-        df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload)
+        df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload, memory=args.memory)
         cold_dur = duration_model.predict(df_cold)[0]
         
         result_entry = {
@@ -611,6 +611,7 @@ def main():
     # Subcommand: Analyze
     analyze_parser = subparsers.add_parser("analyze", help="Analyze a script or project folder and recommend the best cloud platform")
     analyze_parser.add_argument('path', type=str, help="Path to the script file or project directory (e.g., . or app.py)")
+    analyze_parser.add_argument('--memory', type=int, default=256, help="Function memory allocation in MB (e.g., 128, 256, 512, 1024)")
     analyze_parser.add_argument('--input-size', type=float, default=1024, help="Expected average input size in KB")
     analyze_parser.add_argument('--confidence', action='store_true', help="Show prediction confidence score")
     analyze_parser.add_argument('--output', choices=['json', 'csv'], default=None, help="Export results to JSON or CSV file")
