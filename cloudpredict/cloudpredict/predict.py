@@ -19,23 +19,20 @@ ONNX_DEFAULTS = {
 }
 
 FEATURE_COLUMNS = [
-    'input_size', 'is_cold_start', 'platform_azure', 'platform_google', 
-    'runtime_nodejs', 'runtime_python', 'region_us-central1', 'region_us-east-1', 
-    'workload_cpu_math_2_xs_v1', 'workload_cpu_math_3_xs_v1', 'workload_cpu_math_4_xs_v1', 
-    'workload_cpu_math_5_xs_v1', 'workload_crypto_1_xs_v1', 'workload_crypto_2_xs_v1', 
-    'workload_crypto_3_xs_v1', 'workload_crypto_4_xs_v1', 'workload_crypto_5_xs_v1', 
-    'workload_crypto_hash_xs_v1', 'workload_data_proc_1_xs_v1', 'workload_data_proc_2_xs_v1', 
-    'workload_data_proc_3_xs_v1', 'workload_data_proc_4_xs_v1', 'workload_data_proc_5_xs_v1', 
-    'workload_disk_io_1_xs_v1', 'workload_disk_io_2_xs_v1', 'workload_disk_io_3_xs_v1', 
-    'workload_disk_io_4_xs_v1', 'workload_disk_io_5_xs_v1', 'workload_fibonacci_xs_v1', 
-    'workload_file_io_xs_v1', 'workload_float_ops_xs_v1', 'workload_json_transform_xs_v1', 
-    'workload_matrix_mult_xs_v1', 'workload_mem_alloc_1_xs_v1', 'workload_mem_alloc_2_xs_v1', 
-    'workload_mem_alloc_3_xs_v1', 'workload_mem_dict_5_xs_v1', 'workload_mem_string_4_xs_v1', 
-    'workload_net_sim_1_xs_v1', 'workload_net_sim_2_xs_v1', 'workload_net_sim_3_xs_v1', 
-    'workload_net_sim_4_xs_v1', 'workload_net_sim_5_xs_v1', 'workload_prime_sieve_xs_v1', 
-    'workload_sci_1_xs_v1', 'workload_sci_2_xs_v1', 'workload_sci_3_xs_v1', 'workload_sci_4_xs_v1', 
-    'workload_sci_5_xs_v1', 'workload_web_biz_1_xs_v1', 'workload_web_biz_2_xs_v1', 
-    'workload_web_biz_3_xs_v1', 'workload_web_biz_4_xs_v1', 'workload_web_biz_5_xs_v1'
+    'memory', 'input_size', 'is_cold_start', 'platform_aws', 'platform_azure', 'platform_google', 
+    'runtime_java', 'runtime_nodejs', 'runtime_python', 'region_eastus', 'region_us-central1', 'region_us-east-1', 
+    'workload_cpu_math_1_xs_v1', 'workload_cpu_math_2_xs_v1', 'workload_cpu_math_3_xs_v1', 'workload_cpu_math_4_xs_v1', 
+    'workload_cpu_math_5_xs_v1', 'workload_crypto_1_xs_v1', 'workload_crypto_2_xs_v1', 'workload_crypto_3_xs_v1', 
+    'workload_crypto_4_xs_v1', 'workload_crypto_5_xs_v1', 'workload_crypto_hash_xs_v1', 'workload_data_proc_1_xs_v1', 
+    'workload_data_proc_2_xs_v1', 'workload_data_proc_3_xs_v1', 'workload_data_proc_4_xs_v1', 'workload_data_proc_5_xs_v1', 
+    'workload_disk_io_1_xs_v1', 'workload_disk_io_2_xs_v1', 'workload_disk_io_3_xs_v1', 'workload_disk_io_4_xs_v1', 
+    'workload_disk_io_5_xs_v1', 'workload_fibonacci_xs_v1', 'workload_file_io_xs_v1', 'workload_float_ops_xs_v1', 
+    'workload_json_transform_xs_v1', 'workload_matrix_mult_xs_v1', 'workload_mem_alloc_1_xs_v1', 'workload_mem_alloc_2_xs_v1', 
+    'workload_mem_alloc_3_xs_v1', 'workload_mem_dict_5_xs_v1', 'workload_mem_string_4_xs_v1', 'workload_net_sim_1_xs_v1', 
+    'workload_net_sim_2_xs_v1', 'workload_net_sim_3_xs_v1', 'workload_net_sim_4_xs_v1', 'workload_net_sim_5_xs_v1', 
+    'workload_prime_sieve_xs_v1', 'workload_sci_1_xs_v1', 'workload_sci_2_xs_v1', 'workload_sci_3_xs_v1', 'workload_sci_4_xs_v1', 
+    'workload_sci_5_xs_v1', 'workload_web_biz_1_xs_v1', 'workload_web_biz_2_xs_v1', 'workload_web_biz_3_xs_v1', 
+    'workload_web_biz_4_xs_v1', 'workload_web_biz_5_xs_v1'
 ]
 
 _duration_model = None
@@ -71,14 +68,17 @@ def load_onnx_model(source, target):
         return ort.InferenceSession(onnx_path)
     return None
 
-def create_feature_vector(platform, runtime, region, cold_start, input_size, workload):
+def create_feature_vector(platform, runtime, region, cold_start, input_size, workload, memory=1024):
     features = {col: 0 for col in FEATURE_COLUMNS}
     
+    features['memory'] = memory
     features['input_size'] = input_size
     features['is_cold_start'] = 1 if cold_start else 0
     
     platform = platform.lower()
-    if platform == 'azure':
+    if platform == 'aws':
+        features['platform_aws'] = 1
+    elif platform == 'azure':
         features['platform_azure'] = 1
     elif platform in ['gcp', 'google']:
         features['platform_google'] = 1
@@ -88,18 +88,22 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
         features['runtime_python'] = 1
     elif runtime == 'nodejs':
         features['runtime_nodejs'] = 1
+    elif runtime == 'java':
+        features['runtime_java'] = 1
         
     region = region.lower()
     if region == 'us-central1':
         features['region_us-central1'] = 1
     elif region == 'us-east-1':
         features['region_us-east-1'] = 1
+    elif region == 'eastus':
+        features['region_eastus'] = 1
         
     workload_col = f"workload_{workload}"
     if workload_col in features:
         features[workload_col] = 1
         
-    return pd.DataFrame([features])
+    return pd.DataFrame([features])[FEATURE_COLUMNS]
 
 def predict_latency(source, target, exec_mean, mem_mean, runtime):
     try:
@@ -107,15 +111,14 @@ def predict_latency(source, target, exec_mean, mem_mean, runtime):
         onnx_session = load_onnx_model(source, target)
         
         # We predict for the target platform.
-        # Since we don't have region, cold_start, input_size, workload from api, we use defaults.
-        # cli.py default: input_size=1024, cold_start=False, region='us-east-1', workload='cpu_math_2_xs_v1'
         df_features = create_feature_vector(
             platform=target,
             runtime=runtime,
             region='us-east-1',
             cold_start=False,
             input_size=1024,
-            workload='cpu_math_2_xs_v1'
+            workload='cpu_math_2_xs_v1',
+            memory=mem_mean
         )
         
         if onnx_session:
