@@ -10,5 +10,6 @@ cloudpredict.egg-info/dependency_links.txt
 cloudpredict.egg-info/entry_points.txt
 cloudpredict.egg-info/requires.txt
 cloudpredict.egg-info/top_level.txt
+cloudpredict/models/__init__.py
 cloudpredict/models/best_cost_model_LightGBM.pkl
 cloudpredict/models/best_duration_model_XGBoost.pkl
