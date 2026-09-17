@@ -190,7 +190,7 @@ section("STEP 8 — Save output")
 os.makedirs(OUT_PRIMARY.parent, exist_ok=True)
 
 # Try to save to the canonical path; if locked, save with _fixed suffix
-for out_path in [OUT_PRIMARY, OUT_PRIMARY.parent / "ml_ready_dataset_fixed.csv"]:
+for out_path in [OUT_PRIMARY, OUT_PRIMARY.parent / "ml_ready_dataset.csv"]:
     try:
         print(f"  Saving to: {out_path}")
         df.to_csv(out_path, index=False)
@@ -200,7 +200,7 @@ for out_path in [OUT_PRIMARY, OUT_PRIMARY.parent / "ml_ready_dataset_fixed.csv"]
         print(f"  WARNING: {out_path} is locked by another process — trying alternate path...")
 
 # Root copy
-for root_path in [OUT_ROOT, OUT_ROOT.parent / "ml_ready_dataset_fixed.csv"]:
+for root_path in [OUT_ROOT, OUT_ROOT.parent / "ml_ready_dataset.csv"]:
     try:
         print(f"\n  Saving root copy to: {root_path}")
         df.to_csv(root_path, index=False)
