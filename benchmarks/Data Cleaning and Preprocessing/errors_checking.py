@@ -1,6 +1,12 @@
+from pathlib import Path
 import pandas as pd
 
-df = pd.read_csv('./data/raw/benchmark_results.csv')
+# Resolve path relative to repository root
+DATA_PATH = Path(__file__).resolve().parents[2] / 'data' / 'raw' / 'collected_dataset.csv'
+if not DATA_PATH.exists():
+    DATA_PATH = Path('data/raw/collected_dataset.csv')
+
+df = pd.read_csv(DATA_PATH)
 
 # 1. Create a separate dataset just for the failed runs
 failed_runs = df[df['status'] != 'success']
