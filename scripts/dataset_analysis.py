@@ -45,14 +45,19 @@ print("=" * 70)
 print("  ML DATASET ANALYSIS  —  ml_ready_dataset.csv")
 print("=" * 70)
 
-df = pd.read_csv("ml_ready_dataset.csv")
+
+from pathlib import Path
+base_dir = Path(__file__).resolve().parent.parent
+dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset.csv"
+
+df = pd.read_csv(dataset_path)
 print(f"\n  Loaded  {df.shape[0]:,} rows  x  {df.shape[1]} columns")
 
 bool_cols     = df.select_dtypes(include="bool").columns.tolist()
-workload_cols = [c for c in bool_cols if c.startswith("workload_")]
+workload_cols = [c for c in df.columns if c.startswith("workload_")]
 platform_cols = [c for c in df.columns if c.startswith("platform_")]
 
-# Convert bools to int for numeric analysis
+# Convert bools to int for numeric analysis if any boolean types exist
 df_num = df.copy()
 for c in bool_cols:
     df_num[c] = df_num[c].astype(int)
@@ -81,9 +86,10 @@ for i, (f, v) in enumerate(imp_cost.head(TOP_N).items(), 1):
     print(f"  {i:2d}. {f:<42s} {v:.4f}")
 
 # ─── Platform/Workload stats ──────────────────────────────────────────────────
-row_workload_sum = df_num[workload_cols].sum(axis=1)
-plat_sum         = df_num[platform_cols].sum(axis=1)
-corr_m           = df["memory"].corr(df["memory_mb"])
+row_workload_sum = df_num[workload_cols].sum(axis=1) if workload_cols else pd.Series(0, index=df.index)
+plat_sum         = df_num[platform_cols].sum(axis=1) if platform_cols else pd.Series(0, index=df.index)
+has_mem_mb       = "memory_mb" in df.columns
+corr_m           = df["memory"].corr(df["memory_mb"]) if has_mem_mb else None
 
 # ─── Plot 1: Feature Importance ───────────────────────────────────────────────
 import os; os.makedirs("reports", exist_ok=True)
@@ -164,40 +170,64 @@ fig.suptitle("Dataset Problems — Bool Encoding, Orphaned Rows & Duplicate Feat
 
 # 3a — Workload coverage pie
 ax = axes[0]
-sizes  = [(row_workload_sum > 0).sum(), (row_workload_sum == 0).sum()]
+orphaned_count = (row_workload_sum == 0).sum()
+sizes  = [(row_workload_sum > 0).sum(), orphaned_count]
 colors = [ACCENT2, ACCENT3]
 labels = [f"Has Label\n({sizes[0]:,})", f"Orphaned\n({sizes[1]:,})"]
 wedges, texts, autotexts = ax.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%",
     startangle=140, wedgeprops=dict(edgecolor=DARK_BG, lw=2),
     textprops=dict(color=TEXT_COL, fontsize=10))
 for at in autotexts: at.set_color(DARK_BG); at.set_fontsize(10)
-ax.set_title("Workload Coverage\n(float_ops = implicit reference)", color=ACCENT3, fontsize=11)
+title_wl = "Workload Coverage\n(100% labeled - fixed)" if orphaned_count == 0 else "Workload Coverage\n(float_ops = implicit reference)"
+ax.set_title(title_wl, color=ACCENT2 if orphaned_count == 0 else ACCENT3, fontsize=11)
 
 # 3b — Platform distribution
 ax = axes[1]
-plat_data = {"AWS (implicit)": (plat_sum == 0).sum(),
-             "Azure": df["platform_azure"].sum(),
-             "Google": df["platform_google"].sum()}
+if "platform_aws" in df.columns:
+    plat_data = {
+        "AWS": int(df["platform_aws"].sum()),
+        "Azure": int(df["platform_azure"].sum()),
+        "Google": int(df["platform_google"].sum())
+    }
+    plat_title = "Platform Distribution\n(All platforms explicit - fixed)"
+else:
+    plat_data = {
+        "AWS (implicit)": int((plat_sum == 0).sum()),
+        "Azure": int(df["platform_azure"].sum()),
+        "Google": int(df["platform_google"].sum())
+    }
+    plat_title = "Platform Distribution\n(AWS has no explicit column)"
+
 bars = ax.bar(plat_data.keys(), plat_data.values(),
               color=[ACCENT4, ACCENT1, ACCENT2], edgecolor="none", width=0.5)
 for bar, val in zip(bars, plat_data.values()):
     ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 1500,
             f"{val:,}", ha="center", fontsize=10, color=TEXT_COL, fontweight="bold")
-ax.set_title("Platform Distribution\n(AWS has no explicit column)", color=ACCENT4, fontsize=11)
+ax.set_title(plat_title, color=ACCENT4, fontsize=11)
 ax.set_ylabel("Row count"); ax.grid(axis="y", alpha=0.3)
 ax.spines[["top","right"]].set_visible(False)
 
-# 3c — memory vs memory_mb scatter
+# 3c — memory vs memory_mb scatter or memory vs duration
 ax = axes[2]
-s = df.sample(5000, random_state=1)
-sc = ax.scatter(s["memory"], s["memory_mb"], alpha=0.25, s=8,
-                c=s["duration_ms"], cmap="plasma")
-ax.set_xlabel("memory (allocated tier, MB)")
-ax.set_ylabel("memory_mb (actual used, MB)")
-ax.set_title(f"Duplicate Feature Problem\ncorr(memory, memory_mb) = {corr_m:.3f}", color=ACCENT1, fontsize=11)
-cb = plt.colorbar(sc, ax=ax, pad=0.02)
-cb.set_label("duration_ms", color=TEXT_COL, fontsize=9)
-plt.setp(cb.ax.yaxis.get_ticklabels(), color=TEXT_COL)
+s = df.sample(min(5000, len(df)), random_state=1)
+if has_mem_mb:
+    sc = ax.scatter(s["memory"], s["memory_mb"], alpha=0.25, s=8,
+                    c=s["duration_ms"], cmap="plasma")
+    ax.set_xlabel("memory (allocated tier, MB)")
+    ax.set_ylabel("memory_mb (actual used, MB)")
+    ax.set_title(f"Duplicate Feature Problem\ncorr(memory, memory_mb) = {corr_m:.3f}", color=ACCENT1, fontsize=11)
+    cb = plt.colorbar(sc, ax=ax, pad=0.02)
+    cb.set_label("duration_ms", color=TEXT_COL, fontsize=9)
+    plt.setp(cb.ax.yaxis.get_ticklabels(), color=TEXT_COL)
+else:
+    sc = ax.scatter(s["memory"], s["duration_ms"], alpha=0.25, s=8,
+                    c=s["cost_usd"], cmap="viridis")
+    ax.set_xlabel("memory (allocated tier, MB)")
+    ax.set_ylabel("duration_ms")
+    ax.set_title("Memory Tier vs Duration\n(memory_mb dropped - clean)", color=ACCENT1, fontsize=11)
+    cb = plt.colorbar(sc, ax=ax, pad=0.02)
+    cb.set_label("cost_usd", color=TEXT_COL, fontsize=9)
+    plt.setp(cb.ax.yaxis.get_ticklabels(), color=TEXT_COL)
 ax.grid(alpha=0.3); ax.spines[["top","right"]].set_visible(False)
 
 plt.tight_layout()
