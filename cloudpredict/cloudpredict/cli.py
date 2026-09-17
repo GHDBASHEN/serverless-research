@@ -87,6 +87,19 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
         
     return pd.DataFrame([features])[FEATURE_COLUMNS]
 
+def calculate_cost(platform, memory, duration_ms):
+    duration_sec = duration_ms / 1000.0
+    gb_sec = (memory / 1024.0) * duration_sec
+    
+    price_per_gb_sec = 0.0000166667 # AWS / GCP
+    request_price = 0.0000002
+    
+    if platform.lower() == 'azure':
+        price_per_gb_sec = 0.000016
+        
+    cost = (gb_sec * price_per_gb_sec) + request_price
+    return cost
+
 def get_confidence_score(model, df_features):
     """Calculate prediction confidence using tree variance (for tree-based models)."""
     try:
@@ -253,7 +266,7 @@ def run_predict(args, models_dir):
 
         
         pred_duration = duration_model.predict(df_features)[0]
-        pred_cost = cost_model.predict(df_features)[0]
+        pred_cost = calculate_cost(plat.lower(), args.memory, pred_duration)
         
         result_entry = {
             'platform': plat.upper(),
@@ -359,7 +372,7 @@ def run_analyze(args, models_dir):
         # Evaluate Warm Start
         df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload, memory=args.memory)
         warm_dur = duration_model.predict(df_warm)[0]
-        warm_cost = cost_model.predict(df_warm)[0]
+        warm_cost = calculate_cost(plat.lower(), args.memory, warm_dur)
         
         # Evaluate Cold Start
         df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload, memory=args.memory)
@@ -546,7 +559,7 @@ def run_benchmark(args, models_dir):
     for plat in platforms:
         df_features = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload)
         pred_duration = duration_model.predict(df_features)[0]
-        pred_cost = cost_model.predict(df_features)[0]
+        pred_cost = calculate_cost(plat.lower(), 1024, pred_duration)
         
         results.append({
             'platform': plat.upper(),
