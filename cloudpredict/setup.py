@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='cloudpredict',
-    version='0.1.9',
+    version='0.2.0',
     description='Cross-platform serverless performance & cost predictor (AWS / Azure / GCP)',
     packages=find_packages(),
     include_package_data=True,
