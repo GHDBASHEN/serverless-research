@@ -99,9 +99,6 @@ def main():
         dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset_fixed.csv"
     if not dataset_path.exists():
         dataset_path = Path("data/ml_ready_dataset/ml_ready_dataset.csv")
-    if not dataset_path.exists():
-        dataset_path = Path("data/ml_ready_dataset/ml_ready_dataset_fixed.csv")
-    
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
     
