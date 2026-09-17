@@ -53,7 +53,10 @@ if hasattr(sys.stdout, "reconfigure"):
 # ========================= paths =============================================
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 MODELS_DIR   = os.path.join(ROOT, "models")
-DATASET_PATH = os.path.join(ROOT, "data", "ml_ready_dataset", "ml_ready_dataset.csv")
+# Try fixed file first (new clean schema), fall back to original
+_ds_fixed = os.path.join(ROOT, "data", "ml_ready_dataset", "ml_ready_dataset_fixed.csv")
+_ds_orig  = os.path.join(ROOT, "data", "ml_ready_dataset", "ml_ready_dataset.csv")
+DATASET_PATH  = _ds_fixed if os.path.exists(_ds_fixed) else _ds_orig
 
 NEW_DURATION_MODEL = os.path.join(MODELS_DIR, "best_duration_model_XGBoost.pkl")
 NEW_COST_MODEL     = os.path.join(MODELS_DIR, "best_cost_model_RandomForest.pkl")
@@ -61,11 +64,53 @@ LEG_DURATION_MODEL = os.path.join(MODELS_DIR, "serverless_duration_model.joblib"
 LEG_COST_MODEL     = os.path.join(MODELS_DIR, "serverless_cost_model.joblib")
 
 # ========================= feature sets ======================================
+# New models (fixed schema) — all categories explicit, no drop_first, no memory_mb
+# Includes: platform_aws, runtime_java, region_eastus (previously implicit/dropped)
 NEW_FEATURES = [
-    "input_size", "is_cold_start",
-    "platform_azure", "platform_google",
-    "runtime_nodejs", "runtime_python",
-    "region_us-central1", "region_us-east-1",
+    "memory", "input_size", "is_cold_start",
+    # Platform — all 3 explicit
+    "platform_aws",     "platform_azure",      "platform_google",
+    # Runtime — all 3 explicit
+    "runtime_java",     "runtime_nodejs",      "runtime_python",
+    # Region — all 3 explicit
+    "region_eastus",    "region_us-central1",  "region_us-east-1",
+    # Workloads — all 47 explicit (including float_ops, cpu_math_1)
+    "workload_cpu_math_1_xs_v1", "workload_cpu_math_2_xs_v1",
+    "workload_cpu_math_3_xs_v1", "workload_cpu_math_4_xs_v1",
+    "workload_cpu_math_5_xs_v1",
+    "workload_crypto_1_xs_v1",   "workload_crypto_2_xs_v1",
+    "workload_crypto_3_xs_v1",   "workload_crypto_4_xs_v1",
+    "workload_crypto_5_xs_v1",   "workload_crypto_hash_xs_v1",
+    "workload_data_proc_1_xs_v1","workload_data_proc_2_xs_v1",
+    "workload_data_proc_3_xs_v1","workload_data_proc_4_xs_v1",
+    "workload_data_proc_5_xs_v1",
+    "workload_disk_io_1_xs_v1",  "workload_disk_io_2_xs_v1",
+    "workload_disk_io_3_xs_v1",  "workload_disk_io_4_xs_v1",
+    "workload_disk_io_5_xs_v1",
+    "workload_fibonacci_xs_v1",  "workload_file_io_xs_v1",
+    "workload_float_ops_xs_v1",  "workload_json_transform_xs_v1",
+    "workload_matrix_mult_xs_v1",
+    "workload_mem_alloc_1_xs_v1","workload_mem_alloc_2_xs_v1",
+    "workload_mem_alloc_3_xs_v1","workload_mem_dict_5_xs_v1",
+    "workload_mem_string_4_xs_v1",
+    "workload_net_sim_1_xs_v1",  "workload_net_sim_2_xs_v1",
+    "workload_net_sim_3_xs_v1",  "workload_net_sim_4_xs_v1",
+    "workload_net_sim_5_xs_v1",  "workload_prime_sieve_xs_v1",
+    "workload_sci_1_xs_v1",      "workload_sci_2_xs_v1",
+    "workload_sci_3_xs_v1",      "workload_sci_4_xs_v1",
+    "workload_sci_5_xs_v1",
+    "workload_web_biz_1_xs_v1",  "workload_web_biz_2_xs_v1",
+    "workload_web_biz_3_xs_v1",  "workload_web_biz_4_xs_v1",
+    "workload_web_biz_5_xs_v1",
+]
+
+# Legacy models used the old broken schema (54 features, no memory, drop_first=True)
+# Kept here for backward-compatibility when comparing against old .joblib files
+LEGACY_FEATURES = [
+    "memory", "input_size", "is_cold_start",
+    "platform_azure", "platform_google",          # platform_aws was implicit
+    "runtime_nodejs",  "runtime_python",           # runtime_java was implicit
+    "region_us-central1", "region_us-east-1",      # region_eastus was implicit
     "workload_cpu_math_2_xs_v1", "workload_cpu_math_3_xs_v1",
     "workload_cpu_math_4_xs_v1", "workload_cpu_math_5_xs_v1",
     "workload_crypto_1_xs_v1",   "workload_crypto_2_xs_v1",
@@ -90,9 +135,6 @@ NEW_FEATURES = [
     "workload_web_biz_2_xs_v1",  "workload_web_biz_3_xs_v1",
     "workload_web_biz_4_xs_v1",  "workload_web_biz_5_xs_v1",
 ]
-
-# Legacy models have one extra feature at position 0: 'memory'
-LEGACY_FEATURES = ["memory"] + NEW_FEATURES
 
 
 # ========================= helpers ===========================================
@@ -214,10 +256,25 @@ def main():
     df = pd.read_csv(DATASET_PATH, nrows=args.sample)
     print(f"      Loaded {len(df):,} rows x {len(df.columns)} columns  ({time.time()-t0:.1f}s)")
 
-    required = set(LEGACY_FEATURES + ["duration_ms", "cost_usd"])
-    missing  = required - set(df.columns)
+    # Cast any bool columns to int (handles old broken schema and new fixed schema)
+    bool_cols = df.select_dtypes(include='bool').columns.tolist()
+    if bool_cols:
+        print(f"      INFO: Casting {len(bool_cols)} bool columns to int (old schema detected)")
+        df[bool_cols] = df[bool_cols].astype(int)
+
+    # Determine which feature set is available (new schema vs legacy)
+    has_new_cols = all(c in df.columns for c in ["platform_aws", "runtime_java", "region_eastus"])
+    if not has_new_cols:
+        print("      INFO: Fixed schema columns not found - dataset may still be old schema.")
+        print("            Run scripts/preprocess_dataset.py to rebuild the dataset.")
+
+    required = set(["duration_ms", "cost_usd"])
+    # Only require features actually present in this dataset
+    avail_new_feats  = [f for f in NEW_FEATURES    if f in df.columns]
+    avail_leg_feats  = [f for f in LEGACY_FEATURES if f in df.columns]
+    missing = required - set(df.columns)
     if missing:
-        print(f"  ERROR: Missing columns in dataset: {missing}", file=sys.stderr)
+        print(f"  ERROR: Missing target columns in dataset: {missing}", file=sys.stderr)
         sys.exit(1)
 
     # -- STEP 2: Build identical train/test splits ----------------------------
@@ -225,8 +282,8 @@ def main():
     print("[2/4] Creating test split (20%, stratify=is_cold_start, seed=42) ...")
 
     stratify_col = df["is_cold_start"]
-    X_leg  = df[LEGACY_FEATURES]
-    X_new  = df[NEW_FEATURES]
+    X_leg  = df[avail_leg_feats]
+    X_new  = df[avail_new_feats]
     y_dur  = df["duration_ms"].values
     y_cost = df["cost_usd"].values
 

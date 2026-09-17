@@ -94,9 +94,13 @@ def main():
     dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset.csv"
     output_dir = base_dir / "models"
     
-    # Fallback if running from a different relative context
+    # Fallback: try the fixed file name if the old one is still locked
+    if not dataset_path.exists():
+        dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset_fixed.csv"
     if not dataset_path.exists():
         dataset_path = Path("data/ml_ready_dataset/ml_ready_dataset.csv")
+    if not dataset_path.exists():
+        dataset_path = Path("data/ml_ready_dataset/ml_ready_dataset_fixed.csv")
     
     # Ensure output directory exists
     os.makedirs(output_dir, exist_ok=True)
@@ -107,13 +111,24 @@ def main():
     print(f"Dataset loaded. Shape: {df.shape}")
     
     # Check if necessary columns exist
-    required_cols = ['duration_ms', 'cost_usd', 'memory_mb', 'memory', 'is_cold_start']
+    required_cols = ['duration_ms', 'cost_usd', 'memory', 'is_cold_start']
     for col in required_cols:
         if col not in df.columns:
             raise ValueError(f"Missing required column: {col}")
-            
+    
+    # Ensure all one-hot columns are int (fix for old bool-dtype dataset)
+    bool_cols = df.select_dtypes(include='bool').columns
+    if len(bool_cols) > 0:
+        print(f"  WARNING: {len(bool_cols)} bool columns found — casting to int. "
+              f"Re-run scripts/preprocess_dataset.py to fix the source file.")
+        df[bool_cols] = df[bool_cols].astype(int)
+
     # Prepare features and targets
-    X = df.drop(columns=['duration_ms', 'cost_usd', 'memory_mb', 'memory'])
+    # Drop targets and memory_mb (actual usage — excluded from model features)
+    drop_from_X = ['duration_ms', 'cost_usd']
+    if 'memory_mb' in df.columns:
+        drop_from_X.append('memory_mb')   # remove duplicate/leaky feature
+    X = df.drop(columns=drop_from_X)
     y_duration = df['duration_ms']
     y_cost = df['cost_usd']
     stratify_col = df['is_cold_start']
