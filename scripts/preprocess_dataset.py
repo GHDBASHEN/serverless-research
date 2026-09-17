@@ -127,15 +127,15 @@ runtime_cols    = sorted([c for c in df.columns if c.startswith("runtime_")])
 region_cols     = sorted([c for c in df.columns if c.startswith("region_")])
 workload_cols   = sorted([c for c in df.columns if c.startswith("workload_")])
 
-FINAL_ORDER = numeric_feats + targets + platform_cols + runtime_cols + region_cols + workload_cols
+FINAL_ORDER = numeric_feats + platform_cols + runtime_cols + region_cols + workload_cols + targets
 
 print(f"\n  Schema:")
 print(f"    numeric features : {numeric_feats}")
-print(f"    targets          : {targets}")
 print(f"    platform cols    : {platform_cols}")
 print(f"    runtime cols     : {runtime_cols}")
 print(f"    region cols      : {region_cols}")
 print(f"    workload cols    : {len(workload_cols)} columns")
+print(f"    targets (end)    : {targets}")
 print(f"\n  Final column count : {len(FINAL_ORDER)}")
 
 df = df[FINAL_ORDER]
