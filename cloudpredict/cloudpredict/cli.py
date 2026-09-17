@@ -11,25 +11,22 @@ warnings.filterwarnings('ignore', category=UserWarning, module='sklearn')
 warnings.filterwarnings('ignore', category=UserWarning, module='xgboost')
 warnings.filterwarnings('ignore', category=FutureWarning)
 
-# The exact 54 features the models were trained on
+# The exact 59 features the models were trained on
 FEATURE_COLUMNS = [
-    'input_size', 'is_cold_start', 'platform_azure', 'platform_google', 
-    'runtime_nodejs', 'runtime_python', 'region_us-central1', 'region_us-east-1', 
-    'workload_cpu_math_2_xs_v1', 'workload_cpu_math_3_xs_v1', 'workload_cpu_math_4_xs_v1', 
-    'workload_cpu_math_5_xs_v1', 'workload_crypto_1_xs_v1', 'workload_crypto_2_xs_v1', 
-    'workload_crypto_3_xs_v1', 'workload_crypto_4_xs_v1', 'workload_crypto_5_xs_v1', 
-    'workload_crypto_hash_xs_v1', 'workload_data_proc_1_xs_v1', 'workload_data_proc_2_xs_v1', 
-    'workload_data_proc_3_xs_v1', 'workload_data_proc_4_xs_v1', 'workload_data_proc_5_xs_v1', 
-    'workload_disk_io_1_xs_v1', 'workload_disk_io_2_xs_v1', 'workload_disk_io_3_xs_v1', 
-    'workload_disk_io_4_xs_v1', 'workload_disk_io_5_xs_v1', 'workload_fibonacci_xs_v1', 
-    'workload_file_io_xs_v1', 'workload_float_ops_xs_v1', 'workload_json_transform_xs_v1', 
-    'workload_matrix_mult_xs_v1', 'workload_mem_alloc_1_xs_v1', 'workload_mem_alloc_2_xs_v1', 
-    'workload_mem_alloc_3_xs_v1', 'workload_mem_dict_5_xs_v1', 'workload_mem_string_4_xs_v1', 
-    'workload_net_sim_1_xs_v1', 'workload_net_sim_2_xs_v1', 'workload_net_sim_3_xs_v1', 
-    'workload_net_sim_4_xs_v1', 'workload_net_sim_5_xs_v1', 'workload_prime_sieve_xs_v1', 
-    'workload_sci_1_xs_v1', 'workload_sci_2_xs_v1', 'workload_sci_3_xs_v1', 'workload_sci_4_xs_v1', 
-    'workload_sci_5_xs_v1', 'workload_web_biz_1_xs_v1', 'workload_web_biz_2_xs_v1', 
-    'workload_web_biz_3_xs_v1', 'workload_web_biz_4_xs_v1', 'workload_web_biz_5_xs_v1'
+    'memory', 'input_size', 'is_cold_start', 'platform_aws', 'platform_azure', 'platform_google', 
+    'runtime_java', 'runtime_nodejs', 'runtime_python', 'region_eastus', 'region_us-central1', 'region_us-east-1', 
+    'workload_cpu_math_1_xs_v1', 'workload_cpu_math_2_xs_v1', 'workload_cpu_math_3_xs_v1', 'workload_cpu_math_4_xs_v1', 
+    'workload_cpu_math_5_xs_v1', 'workload_crypto_1_xs_v1', 'workload_crypto_2_xs_v1', 'workload_crypto_3_xs_v1', 
+    'workload_crypto_4_xs_v1', 'workload_crypto_5_xs_v1', 'workload_crypto_hash_xs_v1', 'workload_data_proc_1_xs_v1', 
+    'workload_data_proc_2_xs_v1', 'workload_data_proc_3_xs_v1', 'workload_data_proc_4_xs_v1', 'workload_data_proc_5_xs_v1', 
+    'workload_disk_io_1_xs_v1', 'workload_disk_io_2_xs_v1', 'workload_disk_io_3_xs_v1', 'workload_disk_io_4_xs_v1', 
+    'workload_disk_io_5_xs_v1', 'workload_fibonacci_xs_v1', 'workload_file_io_xs_v1', 'workload_float_ops_xs_v1', 
+    'workload_json_transform_xs_v1', 'workload_matrix_mult_xs_v1', 'workload_mem_alloc_1_xs_v1', 'workload_mem_alloc_2_xs_v1', 
+    'workload_mem_alloc_3_xs_v1', 'workload_mem_dict_5_xs_v1', 'workload_mem_string_4_xs_v1', 'workload_net_sim_1_xs_v1', 
+    'workload_net_sim_2_xs_v1', 'workload_net_sim_3_xs_v1', 'workload_net_sim_4_xs_v1', 'workload_net_sim_5_xs_v1', 
+    'workload_prime_sieve_xs_v1', 'workload_sci_1_xs_v1', 'workload_sci_2_xs_v1', 'workload_sci_3_xs_v1', 'workload_sci_4_xs_v1', 
+    'workload_sci_5_xs_v1', 'workload_web_biz_1_xs_v1', 'workload_web_biz_2_xs_v1', 'workload_web_biz_3_xs_v1', 
+    'workload_web_biz_4_xs_v1', 'workload_web_biz_5_xs_v1'
 ]
 
 def load_models(models_dir):
@@ -53,27 +50,34 @@ def load_models(models_dir):
     
     return duration_model, cost_model, d_name, c_name
 
-def create_feature_vector(platform, runtime, region, cold_start, input_size, workload):
-    """Creates a 54-column DataFrame feature vector for the ML model."""
+def create_feature_vector(platform, runtime, region, cold_start, input_size, workload, memory=1024):
+    """Creates a 59-column DataFrame feature vector for the ML model."""
     features = {col: 0 for col in FEATURE_COLUMNS}
     
+    features['memory'] = memory
     features['input_size'] = input_size
     features['is_cold_start'] = 1 if cold_start else 0
     
-    if platform == 'azure':
+    if platform == 'aws':
+        features['platform_aws'] = 1
+    elif platform == 'azure':
         features['platform_azure'] = 1
-    elif platform == 'gcp':
+    elif platform == 'gcp' or platform == 'google':
         features['platform_google'] = 1
         
     if runtime == 'python':
         features['runtime_python'] = 1
     elif runtime == 'nodejs':
         features['runtime_nodejs'] = 1
+    elif runtime == 'java':
+        features['runtime_java'] = 1
         
     if region == 'us-central1':
         features['region_us-central1'] = 1
     elif region == 'us-east-1':
         features['region_us-east-1'] = 1
+    elif region == 'eastus':
+        features['region_eastus'] = 1
         
     workload_col = f"workload_{workload}"
     if workload_col in features:
@@ -81,7 +85,7 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
     else:
         print(f"  Warning: Workload '{workload}' not found in training data. Using default baseline.")
         
-    return pd.DataFrame([features])
+    return pd.DataFrame([features])[FEATURE_COLUMNS]
 
 def get_confidence_score(model, df_features):
     """Calculate prediction confidence using tree variance (for tree-based models)."""
@@ -244,8 +248,9 @@ def run_predict(args, models_dir):
     
     for plat in platforms_to_test:
         df_features = create_feature_vector(
-            plat, args.runtime, args.region, args.cold_start, args.input_size, args.workload
+            plat, args.runtime, args.region, args.cold_start, args.input_size, args.workload, memory=args.memory
         )
+
         
         pred_duration = duration_model.predict(df_features)[0]
         pred_cost = cost_model.predict(df_features)[0]
@@ -352,12 +357,12 @@ def run_analyze(args, models_dir):
     
     for plat in platforms:
         # Evaluate Warm Start
-        df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload)
+        df_warm = create_feature_vector(plat, runtime_for_model, 'us-east-1', False, args.input_size, workload, memory=args.memory)
         warm_dur = duration_model.predict(df_warm)[0]
         warm_cost = cost_model.predict(df_warm)[0]
         
         # Evaluate Cold Start
-        df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload)
+        df_cold = create_feature_vector(plat, runtime_for_model, 'us-east-1', True, args.input_size, workload, memory=args.memory)
         cold_dur = duration_model.predict(df_cold)[0]
         
         result_entry = {
@@ -583,6 +588,29 @@ def run_benchmark(args, models_dir):
 
 
 def main():
+    import sys
+    if len(sys.argv) == 1:
+        print("\n" + "=" * 65)
+        print("  CloudPredict - Intelligent Serverless Decision Engine")
+        print("=" * 65)
+        print("  1. Analyze project (Recommend best cloud platform)")
+        print("  2. Predict performance (Manual configuration)")
+        print("  3. Run local micro-benchmark")
+        print("  4. Exit")
+        print("-" * 65)
+        choice = input("  Enter choice (1-4): ").strip()
+        if choice == '1':
+            path = input("  Enter project path (default: .): ").strip() or '.'
+            sys.argv.extend(['analyze', path])
+        elif choice == '2':
+            sys.argv.extend(['predict'])
+        elif choice == '3':
+            path = input("  Enter project path to benchmark (default: .): ").strip() or '.'
+            sys.argv.extend(['benchmark', path])
+        else:
+            sys.exit(0)
+        print()
+
     parser = argparse.ArgumentParser(
         description="CloudPredict CLI - Intelligent Serverless Decision Engine",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter
@@ -606,6 +634,7 @@ def main():
     # Subcommand: Analyze
     analyze_parser = subparsers.add_parser("analyze", help="Analyze a script or project folder and recommend the best cloud platform")
     analyze_parser.add_argument('path', type=str, help="Path to the script file or project directory (e.g., . or app.py)")
+    analyze_parser.add_argument('--memory', type=int, default=256, help="Function memory allocation in MB (e.g., 128, 256, 512, 1024)")
     analyze_parser.add_argument('--input-size', type=float, default=1024, help="Expected average input size in KB")
     analyze_parser.add_argument('--confidence', action='store_true', help="Show prediction confidence score")
     analyze_parser.add_argument('--output', choices=['json', 'csv'], default=None, help="Export results to JSON or CSV file")
