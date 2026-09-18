@@ -85,7 +85,7 @@ def create_feature_vector(platform, runtime, region, cold_start, input_size, wor
     else:
         print(f"  Warning: Workload '{workload}' not found in training data. Using default baseline.")
         
-    return pd.DataFrame([features])[FEATURE_COLUMNS]
+    return pd.DataFrame([features])[FEATURE_COLUMNS].astype(float)
 
 def get_confidence_score(model, df_features):
     """Calculate prediction confidence using tree variance (for tree-based models)."""
