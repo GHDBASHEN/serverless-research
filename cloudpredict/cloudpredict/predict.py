@@ -1,9 +1,3 @@
-# Ensure lightgbm is imported before XGBoost or model unpickling
-try:
-    import lightgbm
-except ImportError:
-    pass
-
 import joblib
 import pandas as pd
 import glob
@@ -24,22 +18,7 @@ ONNX_DEFAULTS = {
     'num_loops': 3.042
 }
 
-FEATURE_COLUMNS = [
-    'memory', 'input_size', 'is_cold_start', 'platform_aws', 'platform_azure', 'platform_google', 
-    'runtime_java', 'runtime_nodejs', 'runtime_python', 'region_eastus', 'region_us-central1', 'region_us-east-1', 
-    'workload_cpu_math_1_xs_v1', 'workload_cpu_math_2_xs_v1', 'workload_cpu_math_3_xs_v1', 'workload_cpu_math_4_xs_v1', 
-    'workload_cpu_math_5_xs_v1', 'workload_crypto_1_xs_v1', 'workload_crypto_2_xs_v1', 'workload_crypto_3_xs_v1', 
-    'workload_crypto_4_xs_v1', 'workload_crypto_5_xs_v1', 'workload_crypto_hash_xs_v1', 'workload_data_proc_1_xs_v1', 
-    'workload_data_proc_2_xs_v1', 'workload_data_proc_3_xs_v1', 'workload_data_proc_4_xs_v1', 'workload_data_proc_5_xs_v1', 
-    'workload_disk_io_1_xs_v1', 'workload_disk_io_2_xs_v1', 'workload_disk_io_3_xs_v1', 'workload_disk_io_4_xs_v1', 
-    'workload_disk_io_5_xs_v1', 'workload_fibonacci_xs_v1', 'workload_file_io_xs_v1', 'workload_float_ops_xs_v1', 
-    'workload_json_transform_xs_v1', 'workload_matrix_mult_xs_v1', 'workload_mem_alloc_1_xs_v1', 'workload_mem_alloc_2_xs_v1', 
-    'workload_mem_alloc_3_xs_v1', 'workload_mem_dict_5_xs_v1', 'workload_mem_string_4_xs_v1', 'workload_net_sim_1_xs_v1', 
-    'workload_net_sim_2_xs_v1', 'workload_net_sim_3_xs_v1', 'workload_net_sim_4_xs_v1', 'workload_net_sim_5_xs_v1', 
-    'workload_prime_sieve_xs_v1', 'workload_sci_1_xs_v1', 'workload_sci_2_xs_v1', 'workload_sci_3_xs_v1', 'workload_sci_4_xs_v1', 
-    'workload_sci_5_xs_v1', 'workload_web_biz_1_xs_v1', 'workload_web_biz_2_xs_v1', 'workload_web_biz_3_xs_v1', 
-    'workload_web_biz_4_xs_v1', 'workload_web_biz_5_xs_v1'
-]
+FEATURE_COLUMNS = ['memory', 'input_size', 'is_cold_start', 'platform', 'runtime', 'region', 'workload']
 
 _duration_model = None
 _cost_model = None
@@ -51,8 +30,8 @@ def load_models():
         
     models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'models')
     
-    duration_models = glob.glob(os.path.join(models_dir, 'best_duration_model_*.pkl'))
-    cost_models = glob.glob(os.path.join(models_dir, 'best_cost_model_*.pkl'))
+    duration_models = glob.glob(os.path.join(models_dir, 'best_duration_model_CatBoost.pkl'))
+    cost_models = glob.glob(os.path.join(models_dir, 'best_cost_model_CatBoost.pkl'))
     
     if not duration_models or not cost_models:
         raise FileNotFoundError(f"Could not find trained models in {models_dir}")
@@ -75,39 +54,17 @@ def load_onnx_model(source, target):
     return None
 
 def create_feature_vector(platform, runtime, region, cold_start, input_size, workload, memory=1024):
-    features = {col: 0 for col in FEATURE_COLUMNS}
-    
-    features['memory'] = memory
-    features['input_size'] = input_size
-    features['is_cold_start'] = 1 if cold_start else 0
-    
-    platform = platform.lower()
-    if platform == 'aws':
-        features['platform_aws'] = 1
-    elif platform == 'azure':
-        features['platform_azure'] = 1
-    elif platform in ['gcp', 'google']:
-        features['platform_google'] = 1
-        
-    runtime = runtime.lower()
-    if runtime == 'python':
-        features['runtime_python'] = 1
-    elif runtime == 'nodejs':
-        features['runtime_nodejs'] = 1
-    elif runtime == 'java':
-        features['runtime_java'] = 1
-        
-    region = region.lower()
-    if region == 'us-central1':
-        features['region_us-central1'] = 1
-    elif region == 'us-east-1':
-        features['region_us-east-1'] = 1
-    elif region == 'eastus':
-        features['region_eastus'] = 1
-        
-    workload_col = f"workload_{workload}"
-    if workload_col in features:
-        features[workload_col] = 1
+    features = {
+        'memory': int(memory),
+        'input_size': int(input_size),
+        'is_cold_start': 1 if cold_start else 0,
+        'platform': str(platform).lower(),
+        'runtime': str(runtime).lower(),
+        'region': str(region).lower(),
+        'workload': str(workload).lower()
+    }
+    if features['platform'] in ['gcp', 'google']:
+        features['platform'] = 'google'
         
     return pd.DataFrame([features])[FEATURE_COLUMNS]
 
