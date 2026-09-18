@@ -16,7 +16,7 @@ BENCHMARKS_FILE = os.path.join(PROJECT_ROOT, 'experimentation', 'benchmarks.json
 RESULTS_CSV_DEFAULT = os.path.join(PROJECT_ROOT, 'data', 'raw', 'benchmark_results.csv')
 RESULTS_EXCEL_DEFAULT = os.path.join(PROJECT_ROOT, 'data', 'raw', 'benchmark_results.xlsx')
 
-ENDPOINTS_GOOGLE = os.path.join(PROJECT_ROOT, 'experimentation', 'endpoints.json')
+ENDPOINTS_GOOGLE = os.path.join(PROJECT_ROOT, 'experimentation', 'endpoints_gcp.json')
 ENDPOINTS_AWS = os.path.join(PROJECT_ROOT, 'experimentation', 'endpoints_aws.json')
 ENDPOINTS_AZURE = os.path.join(PROJECT_ROOT, 'experimentation', 'endpoints_azure.json')
 
