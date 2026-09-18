@@ -23,12 +23,23 @@ FEATURE_COLUMNS = ['memory', 'input_size', 'is_cold_start', 'platform', 'runtime
 _duration_model = None
 _cost_model = None
 
+def get_models_dir():
+    base = os.path.dirname(os.path.abspath(__file__))
+    pkg_models = os.path.join(base, 'models')
+    repo_models = os.path.join(os.path.dirname(os.path.dirname(base)), 'models')
+    
+    if os.path.exists(pkg_models) and glob.glob(os.path.join(pkg_models, '*.pkl')):
+        return pkg_models
+    if os.path.exists(repo_models) and glob.glob(os.path.join(repo_models, '*.pkl')):
+        return repo_models
+    return pkg_models
+
 def load_models():
     global _duration_model, _cost_model
     if _duration_model is not None and _cost_model is not None:
         return _duration_model, _cost_model
         
-    models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'models')
+    models_dir = get_models_dir()
     
     duration_models = glob.glob(os.path.join(models_dir, 'best_duration_model_CatBoost.pkl'))
     cost_models = glob.glob(os.path.join(models_dir, 'best_cost_model_CatBoost.pkl'))
@@ -46,7 +57,7 @@ def load_onnx_model(source, target):
     if source == target:
         return None
     
-    models_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 'models')
+    models_dir = get_models_dir()
     onnx_path = os.path.join(models_dir, f'{source}_to_{target}_rf.onnx')
     
     if os.path.exists(onnx_path):
