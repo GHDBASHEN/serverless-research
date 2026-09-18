@@ -48,12 +48,13 @@ print("=" * 70)
 
 from pathlib import Path
 base_dir = Path(__file__).resolve().parent.parent
-dataset_path = base_dir / "data" / "ml_ready_dataset" / "ml_ready_dataset.csv"
+dataset_path = base_dir / "data" / "ml_ready_dataset" / "catboost_ready_dataset.csv"
 
 df = pd.read_csv(dataset_path)
 print(f"\n  Loaded  {df.shape[0]:,} rows  x  {df.shape[1]} columns")
 
 bool_cols     = df.select_dtypes(include="bool").columns.tolist()
+obj_cols      = df.select_dtypes(include=["object", "string"]).columns.tolist()
 workload_cols = [c for c in df.columns if c.startswith("workload_")]
 platform_cols = [c for c in df.columns if c.startswith("platform_")]
 
@@ -61,6 +62,8 @@ platform_cols = [c for c in df.columns if c.startswith("platform_")]
 df_num = df.copy()
 for c in bool_cols:
     df_num[c] = df_num[c].astype(int)
+for c in obj_cols:
+    df_num[c] = pd.factorize(df_num[c])[0]
 
 feature_cols = [c for c in df_num.columns if c not in ["duration_ms", "cost_usd"]]
 
@@ -170,8 +173,14 @@ fig.suptitle("Dataset Problems — Bool Encoding, Orphaned Rows & Duplicate Feat
 
 # 3a — Workload coverage pie
 ax = axes[0]
-orphaned_count = (row_workload_sum == 0).sum()
-sizes  = [(row_workload_sum > 0).sum(), orphaned_count]
+if "workload" in df.columns:
+    orphaned_count = df["workload"].isna().sum()
+    has_label_count = df["workload"].notna().sum()
+else:
+    orphaned_count = (row_workload_sum == 0).sum()
+    has_label_count = (row_workload_sum > 0).sum()
+
+sizes  = [has_label_count, orphaned_count]
 colors = [ACCENT2, ACCENT3]
 labels = [f"Has Label\n({sizes[0]:,})", f"Orphaned\n({sizes[1]:,})"]
 wedges, texts, autotexts = ax.pie(sizes, labels=labels, colors=colors, autopct="%1.1f%%",
@@ -183,7 +192,15 @@ ax.set_title(title_wl, color=ACCENT2 if orphaned_count == 0 else ACCENT3, fontsi
 
 # 3b — Platform distribution
 ax = axes[1]
-if "platform_aws" in df.columns:
+if "platform" in df.columns:
+    vc = df["platform"].value_counts().to_dict()
+    plat_data = {
+        "AWS": vc.get("aws", 0),
+        "Azure": vc.get("azure", 0),
+        "Google": vc.get("google", 0)
+    }
+    plat_title = "Platform Distribution\n(Using platform column)"
+elif "platform_aws" in df.columns:
     plat_data = {
         "AWS": int(df["platform_aws"].sum()),
         "Azure": int(df["platform_azure"].sum()),
