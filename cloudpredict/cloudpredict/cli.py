@@ -532,14 +532,22 @@ def main():
         print("  4. Exit")
         print("-" * 65)
         choice = input("  Enter choice (1-4): ").strip()
-        if choice == '1':
-            path = input("  Enter project path (default: .): ").strip() or '.'
-            sys.argv.extend(['analyze', path])
-        elif choice == '2':
-            sys.argv.extend(['predict'])
-        elif choice == '3':
-            path = input("  Enter project path to benchmark (default: .): ").strip() or '.'
-            sys.argv.extend(['benchmark', path])
+        if choice in ['1', '2', '3']:
+            mem_input = input("  Enter memory in MB (default: 256): ").strip()
+            mem = mem_input if mem_input else '256'
+            
+            size_input = input("  Enter average input size in KB (default: 1024): ").strip()
+            inp_size = size_input if size_input else '1024'
+            
+            if choice == '1':
+                path = input("  Enter project path (default: .): ").strip() or '.'
+                sys.argv.extend(['analyze', path, '--memory', mem, '--input-size', inp_size])
+            elif choice == '2':
+                plat = input("  Enter platform (aws/azure/gcp/all) [default: all]: ").strip() or 'all'
+                sys.argv.extend(['predict', '--memory', mem, '--input-size', inp_size, '--platform', plat])
+            elif choice == '3':
+                path = input("  Enter project path to benchmark (default: .): ").strip() or '.'
+                sys.argv.extend(['benchmark', path, '--memory', mem, '--input-size', inp_size])
         else:
             sys.exit(0)
         print()
