@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: cloudpredict
-Version: 0.2.1
+Version: 0.2.4
 Summary: Cross-platform serverless performance & cost predictor (AWS / Azure / GCP)
 Requires-Dist: pandas
 Requires-Dist: joblib
