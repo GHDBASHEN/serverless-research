@@ -1,3 +1,6 @@
+# Import lightgbm before any other ML libraries or model unpickling
+# On Windows, loading XGBoost before LightGBM causes an OpenMP runtime collision (access violation 0x00000000)
+import lightgbm
 import argparse
 import joblib
 import pandas as pd
@@ -41,8 +44,9 @@ def load_models(models_dir):
         
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        duration_model = joblib.load(duration_models[0])
+        # Load cost model before duration model to ensure LightGBM loads before XGBoost if applicable
         cost_model = joblib.load(cost_models[0])
+        duration_model = joblib.load(duration_models[0])
     
     # Extract model names for display
     d_name = os.path.basename(duration_models[0]).replace('best_duration_model_', '').replace('.pkl', '')

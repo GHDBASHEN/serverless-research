@@ -1,3 +1,9 @@
+# Ensure lightgbm is imported before XGBoost or model unpickling
+try:
+    import lightgbm
+except ImportError:
+    pass
+
 import joblib
 import pandas as pd
 import glob
@@ -51,8 +57,8 @@ def load_models():
     if not duration_models or not cost_models:
         raise FileNotFoundError(f"Could not find trained models in {models_dir}")
         
-    _duration_model = joblib.load(duration_models[0])
     _cost_model = joblib.load(cost_models[0])
+    _duration_model = joblib.load(duration_models[0])
     return _duration_model, _cost_model
 
 def load_onnx_model(source, target):
