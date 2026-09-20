@@ -27,9 +27,8 @@ def main():
         if col in X.columns:
             X[col] = X[col].astype(str)
             
-    # Sub-sample the dataset for faster SHAP calculation (optional, but recommended for large datasets)
-    # Using 10,000 samples for the explanation
-    X_sample = X.sample(n=min(10000, len(X)), random_state=42)
+    # Use all rows in the dataset for SHAP calculation
+    X_sample = X
     
     # Model files to analyze
     models_to_analyze = [
